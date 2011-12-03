@@ -1,7 +1,7 @@
 /*
 
 
-  Name: Disjoint Net
+  Name: Disjoint Set
 
 
   Copyright: LogicalMars Library
@@ -13,15 +13,16 @@
   Date: 12-10-08 19:04
 
 
-  Description: father[i]表示i的父节点，初始时father[i]=i;
+  Description: father[i] indicate i's father node， initially father[i] = i
 
 
 */
 
 
+/*
+ * Used in simple relation, a father just have children, children are equal
+ */
 int find_father ( int x ) //父子关系仅为存在时的简单程序处理
-
-
 {
     int i, f, next, j;
     i = x;
@@ -40,7 +41,10 @@ int find_father ( int x ) //父子关系仅为存在时的简单程序处理
 
 
 
-
+/*
+ * Used when rich relationship exist between father and children
+ * ch[i] means the number of relation
+ */
 long fath ( long p ) //父子关系多样时，ch[i] 为 i与父节点的关系
 
 
@@ -54,9 +58,9 @@ long fath ( long p ) //父子关系多样时，ch[i] 为 i与父节点的关系
 }
 
 
-
-
-
+/*
+ * Add x as y's child
+ */
 void add ( long x, long y )
 
 
