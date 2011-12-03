@@ -1,120 +1,191 @@
 /*
-ÇóÅ·À­»ØÂ·
-·½·¨£º²»·ÖÓĞÏòÍ¼»òÕßÎŞÏòÍ¼£¬ÕÒµ½Æğµã£¬È»ºódfs£¬Ö»Òª¸ÃµãÓĞ±ßÏàÁ¬£¬¾ÍÉ¾µô±ß£¬
-¼ÌĞødfs£¬Ö±µ½¸ÄµãÃ»ÓĞ±ßÏàÁ¬ÎªÖ¹£¬½«¸Ãµã¼ÓÈëÕ»¡£
-×¢Òâ¼ÓÈëÕ»µÄË³ĞòÓëÊä³öµÄË³ĞòÏà·´¡£
-ÎŞÏòÍ¼Ìõ¼ş£º ¶ÈÎªÆæÊıµÄµãÖÁ¶àÓĞÁ½¸ö
-ÓĞÏòÍ¼Ìõ¼ş£º³ö¶ÈµÈÓÚÈë¶È£¬»òÕßÏà²îÒ»¸öµÄµã×î¶àÁ½¸ö
-*/ 
+
+
+æ±‚æ¬§æ‹‰å›è·¯
+
+
+æ–¹æ³•ï¼šä¸åˆ†æœ‰å‘å›¾æˆ–è€…æ— å‘å›¾ï¼Œæ‰¾åˆ°èµ·ç‚¹ï¼Œç„¶ådfsï¼Œåªè¦è¯¥ç‚¹æœ‰è¾¹ç›¸è¿ï¼Œå°±åˆ æ‰è¾¹ï¼Œ
+
+
+ç»§ç»­dfsï¼Œç›´åˆ°æ”¹ç‚¹æ²¡æœ‰è¾¹ç›¸è¿ä¸ºæ­¢ï¼Œå°†è¯¥ç‚¹åŠ å…¥æ ˆã€‚
+
+
+æ³¨æ„åŠ å…¥æ ˆçš„é¡ºåºä¸è¾“å‡ºçš„é¡ºåºç›¸åã€‚
+
+
+æ— å‘å›¾æ¡ä»¶ï¼š åº¦ä¸ºå¥‡æ•°çš„ç‚¹è‡³å¤šæœ‰ä¸¤ä¸ª
+
+
+æœ‰å‘å›¾æ¡ä»¶ï¼šå‡ºåº¦ç­‰äºå…¥åº¦ï¼Œæˆ–è€…ç›¸å·®ä¸€ä¸ªçš„ç‚¹æœ€å¤šä¸¤ä¸ª
+
+
+*/
+
+
+
+
 
 #include <string>
+
+
 #include <list>
+
+
 #include <stdio.h>
+
+
 #include <string.h>
+
+
 #include <algorithm>
+
+
 using namespace std;
+
+
 const int maxn = 1010;
+
+
 list<string> map[26][26];
+
+
 int num[26][26];
+
+
 int start[26];
+
+
 string words[maxn];
 
-int ind[26],outd[26];
+
+
+
+
+int ind[26], outd[26];
+
+
 int n;
+
+
 int op;
+
+
 int o[maxn];
+
+
 int tag[maxn];
 
-void dfs(int p)
+
+
+
+
+void dfs ( int p )
+
+
 {
-        int i,j;
-        for (j=start[p];words[j][0]-'a' == p;j++)
-        {
-                if (tag[j]) continue;
-                i=words[j][words[j].size()-1]-'a';
-                if (num[p][i]==0) continue;
-                tag[j]=1;
-                num[p][i]--;
-                dfs(i);
-        }
-        op++;
-        o[op] = p;
-}       
+    int i, j;
+    for ( j = start[p]; words[j][0] - 'a' == p; j++ )
+    {
+        if ( tag[j] ) continue;
+        i = words[j][words[j].size() - 1] - 'a';
+        if ( num[p][i] == 0 ) continue;
+        tag[j] = 1;
+        num[p][i]--;
+        dfs ( i );
+    }
+    op++;
+    o[op] = p;
+}
+
+
 int main()
+
+
 {
-        freopen("pku.in","r",stdin);
-        freopen("pku.out","w",stdout);
-        int i,j;
-        int cs;
-        scanf("%d",&cs);
-        while (cs--)
+    freopen ( "pku.in", "r", stdin );
+    freopen ( "pku.out", "w", stdout );
+    int i, j;
+    int cs;
+    scanf ( "%d", &cs );
+    while ( cs-- )
+    {
+        scanf ( "%d", &n );
+        int i;
+        char s[25];
+        for ( i = 1; i <= n; i++ )
         {
-                scanf("%d",&n);
-                int i;
-                char s[25];
-                for (i=1;i<=n;i++)
-                {
-                        scanf("%s",s);
-                        words[i]=s;
-                }
-                sort(words+1,words+n+1);
-                for (i=0;i<26;i++)
-                        for (j=0;j<26;j++) map[i][j].clear();
-                memset(ind,0,sizeof(ind));
-                memset(outd,0,sizeof(outd));
-                memset(num,0,sizeof(num));
-                memset(start,0,sizeof(start));
-                memset(tag,0,sizeof(tag));
-                
-                for (i=1;i<=n;i++)
-                {
-                        if (start[words[i][0]-'a'] == 0) start[words[i][0]-'a']=i;
-                }
-               // for (i=1;i<=n;i++) puts(words[i].c_str());
+            scanf ( "%s", s );
+            words[i] = s;
+        }
+        sort ( words + 1, words + n + 1 );
+        for ( i = 0; i < 26; i++ )
+            for ( j = 0; j < 26; j++ ) map[i][j].clear();
+        memset ( ind, 0, sizeof ( ind ) );
+        memset ( outd, 0, sizeof ( outd ) );
+        memset ( num, 0, sizeof ( num ) );
+        memset ( start, 0, sizeof ( start ) );
+        memset ( tag, 0, sizeof ( tag ) );
+        for ( i = 1; i <= n; i++ )
+        {
+            if ( start[words[i][0] - 'a'] == 0 ) start[words[i][0] - 'a'] = i;
+        }
+        // for (i=1;i<=n;i++) puts(words[i].c_str());
 //                for (i=0;i<26;i++) printf("%d ",start[i]);
 //                puts("");
-                for (i=1;i<=n;i++)
-                {
-                        int p = words[i][0]-'a';
-                        int q = words[i][words[i].size()-1]-'a';
-                        outd[p]++;
-                        ind[q]++;
-                        map[p][q].push_back(words[i]);
-                        num[p][q]++;
-                }
-                
-                int st;
-                int m=0;
-                for (i=0;i<26;i++)
-                {
-                        if (ind[i]==outd[i]-1 || ind[i]==outd[i]+1) m++;
-                        else if (ind[i]!=outd[i]) {m=3;break;}
-                }
-                if (m>2) {puts("***");continue;}
-                
-                for (i=0;i<26;i++)
-                {
-                        if (ind[i]<outd[i]) {st=i;break;}
-                }
-                if (i==26) st = words[1][0]-'a';
-                
-                op=0;
-                dfs(st);
-                
-                if (op<n) {puts("***");continue;}
-                reverse(o+1,o+op+1);
+        for ( i = 1; i <= n; i++ )
+        {
+            int p = words[i][0] - 'a';
+            int q = words[i][words[i].size() - 1] - 'a';
+            outd[p]++;
+            ind[q]++;
+            map[p][q].push_back ( words[i] );
+            num[p][q]++;
+        }
+        int st;
+        int m = 0;
+        for ( i = 0; i < 26; i++ )
+        {
+            if ( ind[i] == outd[i] - 1 || ind[i] == outd[i] + 1 ) m++;
+            else if ( ind[i] != outd[i] )
+            {
+                m = 3;
+                break;
+            }
+        }
+        if ( m > 2 )
+        {
+            puts ( "***" );
+            continue;
+        }
+        for ( i = 0; i < 26; i++ )
+        {
+            if ( ind[i] < outd[i] )
+            {
+                st = i;
+                break;
+            }
+        }
+        if ( i == 26 ) st = words[1][0] - 'a';
+        op = 0;
+        dfs ( st );
+        if ( op < n )
+        {
+            puts ( "***" );
+            continue;
+        }
+        reverse ( o + 1, o + op + 1 );
 //                for (i=1;i<=op;i++) putchar(o[i]+'a');
 //                putchar('\n');
-
-                for (i=1;i<=op-1;i++)
-                {
-                        int p = o[i];
-                        int q = o[i+1];
-                        if (i>1) putchar('.');
-                        printf("%s",map[p][q].front().c_str());
-                        map[p][q].pop_front();
-                }
-                printf("\n");
+        for ( i = 1; i <= op - 1; i++ )
+        {
+            int p = o[i];
+            int q = o[i + 1];
+            if ( i > 1 ) putchar ( '.' );
+            printf ( "%s", map[p][q].front().c_str() );
+            map[p][q].pop_front();
         }
-        return 0;
+        printf ( "\n" );
+    }
+    return 0;
 }
+

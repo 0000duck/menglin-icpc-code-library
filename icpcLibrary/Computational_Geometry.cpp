@@ -1,225 +1,440 @@
 /*
-  Name: ¼ÆËã¼¸ºÎ±ê×¼³ÌĞò¿â 
+
+
+  Name: è®¡ç®—å‡ ä½•æ ‡å‡†ç¨‹åºåº“
+
+
   Copyright: LogicalMars Library
+
+
   Author: StarFish && Improved by LogicalMars
+
+
   Date: 12-10-08 12:11
+
+
 */
 
+
+
+
+
 #include <stdlib.h>
+
+
 #include <math.h>
 
+
+
+
+
 const double zero = 1e-6;
+
+
 const double infinity = 1e20;
-struct TPoint{
-	double x,y;
-	};
 
-struct TLineSeg{
-	TPoint a,b;
-	};
 
-double dis(TPoint p1,TPoint p2)//ÇóÆ½ÃæÉÏÁ½µãÖ®¼äµÄ¾àÀë
+struct TPoint
 {
-	return(sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)));	
+
+
+    double x, y;
+
+
+};
+
+
+
+
+
+struct TLineSeg
+{
+
+
+    TPoint a, b;
+
+
+};
+
+
+
+
+
+double dis ( TPoint p1, TPoint p2 ) //æ±‚å¹³é¢ä¸Šä¸¤ç‚¹ä¹‹é—´çš„è·ç¦»
+
+
+{
+    return ( sqrt ( ( p1.x - p2.x ) * ( p1.x - p2.x ) + ( p1.y - p2.y ) * ( p1.y - p2.y ) ) );
 }
 
-double multiply(TPoint p1,TPoint p2,TPoint p0)
+
+
+
+
+double multiply ( TPoint p1, TPoint p2, TPoint p0 )
+
+
 {
-	return((p1.x-p0.x)*(p2.y-p0.y)-(p2.x-p0.x)*(p1.y-p0.y));	
+    return ( ( p1.x - p0.x ) * ( p2.y - p0.y ) - ( p2.x - p0.x ) * ( p1.y - p0.y ) );
 }
 
-//È·¶¨Á½ÌõÏß¶ÎÊÇ·ñÏà½»
-double max(double m1,double m2)
+
+
+
+
+//ç¡®å®šä¸¤æ¡çº¿æ®µæ˜¯å¦ç›¸äº¤
+
+
+double max ( double m1, double m2 )
+
+
 {
-    if (m1>m2) return m1;
+    if ( m1 > m2 ) return m1;
     return m2;
 }
-double min(double m1,double m2)
+
+
+double min ( double m1, double m2 )
+
+
 {
-    if (m1<m2) return m1;
+    if ( m1 < m2 ) return m1;
     return m2;
 }
-int intersect(TLineSeg u,TLineSeg v)//·ÇÑÏ¸ñÏà½»£¬ÑÏ¸ñÏà½»Òª½« >= ¸Ä³É > 
-{
-	return( (max(u.a.x,u.b.x)>=min(v.a.x,v.b.x))&&
-	        (max(v.a.x,v.b.x)>=min(u.a.x,u.b.x))&&
-	        (max(u.a.y,u.b.y)>=min(v.a.y,v.b.y))&&
-	        (max(v.a.y,v.b.y)>=min(u.a.y,u.b.y))&&
-	        (multiply(v.a,u.b,u.a)*multiply(u.b,v.b,u.a)>=0)&&
-	        (multiply(u.a,v.b,v.a)*multiply(v.b,u.b,v.a)>=0));
-}
 
-//ÅĞ¶ÏµãpÊÇ·ñÔÚÏß¶ÎlÉÏ
-int online(TLineSeg l,TPoint p)
+
+int intersect ( TLineSeg u, TLineSeg v ) //éä¸¥æ ¼ç›¸äº¤ï¼Œä¸¥æ ¼ç›¸äº¤è¦å°† >= æ”¹æˆ >
+
+
 {
-    double temp=multiply(l.b,p,l.a);    
-	return(temp>=-zero && temp<=zero &&( ((p.x-l.a.x)*(p.x-l.b.x)<=-zero )||( (p.y-l.a.y)*(p.y-l.b.y)<=-zero )) );
+    return ( ( max ( u.a.x, u.b.x ) >= min ( v.a.x, v.b.x ) ) &&
+             ( max ( v.a.x, v.b.x ) >= min ( u.a.x, u.b.x ) ) &&
+             ( max ( u.a.y, u.b.y ) >= min ( v.a.y, v.b.y ) ) &&
+             ( max ( v.a.y, v.b.y ) >= min ( u.a.y, u.b.y ) ) &&
+             ( multiply ( v.a, u.b, u.a ) * multiply ( u.b, v.b, u.a ) >= 0 ) &&
+             ( multiply ( u.a, v.b, v.a ) * multiply ( v.b, u.b, v.a ) >= 0 ) );
 }
 
 
-//ÅĞ¶ÏÁ½¸öµãÊÇ·ñÏàµÈ
-int Euqal_Point(TPoint p1,TPoint p2)
+
+
+
+//åˆ¤æ–­ç‚¹pæ˜¯å¦åœ¨çº¿æ®µlä¸Š
+
+
+int online ( TLineSeg l, TPoint p )
+
+
 {
-return((abs(p1.x-p2.x)<zero)&&(abs(p1.y-p2.y)<zero));
+    double temp = multiply ( l.b, p, l.a );
+    return ( temp >= -zero && temp <= zero && ( ( ( p.x - l.a.x ) * ( p.x - l.b.x ) <= -zero ) || ( ( p.y - l.a.y ) * ( p.y - l.b.y ) <= -zero ) ) );
 }
 
-//Ò»ÖÖÏß¶ÎÏà½»ÅĞ¶Ïº¯Êı£¬µ±ÇÒ½öµ±u,vÏà½»²¢ÇÒ½»µã²»ÊÇu,vµÄ¶ËµãÊ±º¯ÊıÎªtrue;
-int intersect_A(TLineSeg u,TLineSeg v)
+
+
+
+
+
+
+
+//åˆ¤æ–­ä¸¤ä¸ªç‚¹æ˜¯å¦ç›¸ç­‰
+
+
+int Euqal_Point ( TPoint p1, TPoint p2 )
+
+
 {
-	return((intersect(u,v))&&
-	       (!Euqal_Point(u.a,v.a))&&
-	       (!Euqal_Point(u.a,v.b))&&
-	       (!Euqal_Point(u.b,v.a))&&
-	       (!Euqal_Point(u.b,v.b)));
+    return ( ( abs ( p1.x - p2.x ) < zero ) && ( abs ( p1.y - p2.y ) < zero ) );
 }
+
+
+
+
+
+//ä¸€ç§çº¿æ®µç›¸äº¤åˆ¤æ–­å‡½æ•°ï¼Œå½“ä¸”ä»…å½“u,vç›¸äº¤å¹¶ä¸”äº¤ç‚¹ä¸æ˜¯u,vçš„ç«¯ç‚¹æ—¶å‡½æ•°ä¸ºtrue;
+
+
+int intersect_A ( TLineSeg u, TLineSeg v )
+
+
+{
+    return ( ( intersect ( u, v ) ) &&
+             ( !Euqal_Point ( u.a, v.a ) ) &&
+             ( !Euqal_Point ( u.a, v.b ) ) &&
+             ( !Euqal_Point ( u.b, v.a ) ) &&
+             ( !Euqal_Point ( u.b, v.b ) ) );
+}
+
+
+
+
+
+
 
 
 /*===============================================
 
-   ÅĞ¶ÏµãqÊÇ·ñÔÚ¶à±ßĞÎPolygonÄÚ£¬
-   ÆäÖĞ¶à±ßĞÎÊÇÈÎÒâµÄÍ¹»ò°¼¶à±ßĞÎ£¬
-   PolygonÖĞ´æ·Å¶à±ßĞÎµÄÄæÊ±Õë¶¥µãĞòÁĞ
+
+
+
+
+   åˆ¤æ–­ç‚¹qæ˜¯å¦åœ¨å¤šè¾¹å½¢Polygonå†…ï¼Œ
+
+
+   å…¶ä¸­å¤šè¾¹å½¢æ˜¯ä»»æ„çš„å‡¸æˆ–å‡¹å¤šè¾¹å½¢ï¼Œ
+
+
+   Polygonä¸­å­˜æ”¾å¤šè¾¹å½¢çš„é€†æ—¶é’ˆé¡¶ç‚¹åºåˆ—
+
+
+
+
 
 ================================================*/
 
-int InsidePolygon(int vcount,TPoint Polygon[],TPoint q)
+
+
+
+
+int InsidePolygon ( int vcount, TPoint Polygon[], TPoint q )
+
+
 {
-	int c=0,i,n;
-	TLineSeg l1,l2;
-		
-	l1.a=q;
-	l1.b=q;
-	l1.b.x=infinity;
-	n=vcount;
-	for (i=0;i<vcount;i++)
-	{
-		l2.a=Polygon[i];
-		l2.b=Polygon[(i+1)%n];
-		if (  (intersect_A(l1,l2))||
-		      (
-		        (online(l1,Polygon[(i+1)%n]))&&
-		        (
-		         (!online(l1,Polygon[(i+2)%n]))&&
-		         (multiply(Polygon[i],Polygon[(i+1)%n],l1.a)*multiply(Polygon[(i+1)%n],Polygon[(i+2)%n],l1.a)>0)
-		         ||
-		         (online(l1,Polygon[(i+2)%n]))&&
-		         (multiply(Polygon[i],Polygon[(i+2)%n],l1.a)*multiply(Polygon[(i+2)%n],Polygon[(i+3)%n],l1.a)>0)		
-		        )
-		      )
-		   ) c++;
-		}
-		return(c%2!=0);
+    int c = 0, i, n;
+    TLineSeg l1, l2;
+    l1.a = q;
+    l1.b = q;
+    l1.b.x = infinity;
+    n = vcount;
+    for ( i = 0; i < vcount; i++ )
+    {
+        l2.a = Polygon[i];
+        l2.b = Polygon[ ( i + 1 ) % n];
+        if (  ( intersect_A ( l1, l2 ) ) ||
+                (
+                    ( online ( l1, Polygon[ ( i + 1 ) % n] ) ) &&
+                    (
+                        ( !online ( l1, Polygon[ ( i + 2 ) % n] ) ) &&
+                        ( multiply ( Polygon[i], Polygon[ ( i + 1 ) % n], l1.a ) *multiply ( Polygon[ ( i + 1 ) % n], Polygon[ ( i + 2 ) % n], l1.a ) > 0 )
+                        ||
+                        ( online ( l1, Polygon[ ( i + 2 ) % n] ) ) &&
+                        ( multiply ( Polygon[i], Polygon[ ( i + 2 ) % n], l1.a ) *multiply ( Polygon[ ( i + 2 ) % n], Polygon[ ( i + 3 ) % n], l1.a ) > 0 )
+                    )
+                )
+           ) c++;
+    }
+    return ( c % 2 != 0 );
 }
+
+
+
+
+
+
 
 
 /********************************************\
+
+
 *                                            *
-*      ¼ÆËã¶à±ßĞÎµÄÃæ»ı                        *
+
+
+*      è®¡ç®—å¤šè¾¹å½¢çš„é¢ç§¯                        *
+
+
 *                                            *
-*     ÒªÇó°´ÕÕÄæÊ±Õë·½ÏòÊäÈë¶à±ßĞÎ¶¥µã           *
-*     ¿ÉÒÔÊÇÍ¹¶à±ßĞÎ»ò°¼¶à±ßĞÎ			   *
-*     Èç¹ûÎªË³Ê±Õë£¬ÔòÎªÏàÓ¦¸ºÖµ                  *
+
+
+*     è¦æ±‚æŒ‰ç…§é€†æ—¶é’ˆæ–¹å‘è¾“å…¥å¤šè¾¹å½¢é¡¶ç‚¹           *
+
+
+*     å¯ä»¥æ˜¯å‡¸å¤šè¾¹å½¢æˆ–å‡¹å¤šè¾¹å½¢			   *
+
+
+*     å¦‚æœä¸ºé¡ºæ—¶é’ˆï¼Œåˆ™ä¸ºç›¸åº”è´Ÿå€¼                  *
+
+
 *                                            *
+
+
 \********************************************/
 
-double area_of_polygon(int vcount,double x[],double y[])
+
+
+
+
+double area_of_polygon ( int vcount, double x[], double y[] )
+
+
 {
-  int i;
-  double s;
-  if (vcount<3) return 0;
-  s=y[0]*(x[vcount-1]-x[1]);
-  for (i=1;i<vcount;i++)
-     s+=y[i]*(x[(i-1)]-x[(i+1)%vcount]);
-  return s/2;
-  }
+    int i;
+    double s;
+    if ( vcount < 3 ) return 0;
+    s = y[0] * ( x[vcount - 1] - x[1] );
+    for ( i = 1; i < vcount; i++ )
+        s += y[i] * ( x[ ( i - 1 )] - x[ ( i + 1 ) % vcount] );
+    return s / 2;
+}
+
+
+
+
+
+
 
 
 /*====================================================================================
-   Ñ°ÕÒÍ¹°ü graham É¨Ãè·¨
 
-  PointSetÎªÊäÈëµÄµã¼¯£»
-  chÎªÊä³öµÄÍ¹°üÉÏµÄµã¼¯£¬°´ÕÕÄæÊ±Õë·½ÏòÅÅÁĞ;
-  nÎªPointSetÖĞµÄµãµÄÊıÄ¿
-  lenÎªÊä³öµÄÍ¹°üÉÏµÄµãµÄ¸öÊı£»
 
-	   ÉèÏÂÒ»¸öÉ¨ÃèµÄµãPointSet[i]=P2,µ±Ç°Õ»¶¥µÄÁ½¸öµãch[top]=P1,ch[top-1]=P0,
-     Èç¹ûP1P2Ïà¶ÔÓÚP0P1ÔÚµãP1Ïò×óĞı×ª(¹²ÏßÒ²²»ĞĞ)£¬ÔòP0,P1Ò»¶¨ÊÇÍ¹°üÉÏµÄµã£»
-     ·ñÔòP1Ò»¶¨²»ÊÇÍ¹°üÉÏµÄµã£¬Ó¦¸Ã½«Æä³öÕ»¡£
-     ±ÈÈçÏÂÃæ×óÍ¼ÖĞµã1¾ÍÒ»¶¨ÊÇÍ¹°üÉÏµÄµã£¬ÓÒÍ¼ÖĞµã1¾ÍÒ»¶¨²»ÊÇÍ¹°üÉÏµÄµã£¬ÒòÎª
-     ¿ÉÒÔÁ¬½Óµã0,2¹¹³ÉÍ¹°üµÄ±ß
+   å¯»æ‰¾å‡¸åŒ… graham æ‰«ææ³•
+
+
+
+
+
+  PointSetä¸ºè¾“å…¥çš„ç‚¹é›†ï¼›
+
+
+  chä¸ºè¾“å‡ºçš„å‡¸åŒ…ä¸Šçš„ç‚¹é›†ï¼ŒæŒ‰ç…§é€†æ—¶é’ˆæ–¹å‘æ’åˆ—;
+
+
+  nä¸ºPointSetä¸­çš„ç‚¹çš„æ•°ç›®
+
+
+  lenä¸ºè¾“å‡ºçš„å‡¸åŒ…ä¸Šçš„ç‚¹çš„ä¸ªæ•°ï¼›
+
+
+
+
+
+	   è®¾ä¸‹ä¸€ä¸ªæ‰«æçš„ç‚¹PointSet[i]=P2,å½“å‰æ ˆé¡¶çš„ä¸¤ä¸ªç‚¹ch[top]=P1,ch[top-1]=P0,
+
+
+     å¦‚æœP1P2ç›¸å¯¹äºP0P1åœ¨ç‚¹P1å‘å·¦æ—‹è½¬(å…±çº¿ä¹Ÿä¸è¡Œ)ï¼Œåˆ™P0,P1ä¸€å®šæ˜¯å‡¸åŒ…ä¸Šçš„ç‚¹ï¼›
+
+
+     å¦åˆ™P1ä¸€å®šä¸æ˜¯å‡¸åŒ…ä¸Šçš„ç‚¹ï¼Œåº”è¯¥å°†å…¶å‡ºæ ˆã€‚
+
+
+     æ¯”å¦‚ä¸‹é¢å·¦å›¾ä¸­ç‚¹1å°±ä¸€å®šæ˜¯å‡¸åŒ…ä¸Šçš„ç‚¹ï¼Œå³å›¾ä¸­ç‚¹1å°±ä¸€å®šä¸æ˜¯å‡¸åŒ…ä¸Šçš„ç‚¹ï¼Œå› ä¸º
+
+
+     å¯ä»¥è¿æ¥ç‚¹0,2æ„æˆå‡¸åŒ…çš„è¾¹
+
+
            2
+
+
            |
+
+
            |                 _____2
+
+
            1               1
+
+
           /               /
+
+
     ____0/          ____0/
 
+
+
+
+
 ====================================================================================*/
-//Î´¿¼ÂÇÊµÊıÀàĞÍ£¬ĞèÔö¼Ó1e-8
+
+
+//æœªè€ƒè™‘å®æ•°ç±»å‹ï¼Œéœ€å¢åŠ 1e-8
+
+
 TPoint bp;
-bool PolarComp(const TPoint &p1,const TPoint &p2)
+
+
+bool PolarComp ( const TPoint &p1, const TPoint &p2 )
+
+
 {
-    int u=multiply(p1,p2,bp);
-    return (u>0) || (u==0 && dis(p1,bp)<dis(p2,bp));
+    int u = multiply ( p1, p2, bp );
+    return ( u > 0 ) || ( u == 0 && dis ( p1, bp ) < dis ( p2, bp ) );
 }
-void Graham_scan(TPoint PointSet[],TPoint ch[],int n,long &len)
+
+
+void Graham_scan ( TPoint PointSet[], TPoint ch[], int n, long &len )
+
+
 {
-    if (n<=3)
+    if ( n <= 3 )
     {
-        len=n;
+        len = n;
         int i;
-        for (i=0;i<n;i++) ch[i]=PointSet[i];
+        for ( i = 0; i < n; i++ ) ch[i] = PointSet[i];
         return;
     }
-    int i,j,k=0,top=2;
-	TPoint tmp;
-	
-	//Ñ¡È¡PointSetÖĞy×ø±ê×îĞ¡µÄµãPointSet[k]£¬Èç¹ûÕâÑùµÄµãÓÒ¶à¸ö£¬ÔòÈ¡×î×ó±ßµÄÒ»¸ö
-	for(i=1;i<n;i++)
-		if ((PointSet[i].y<PointSet[k].y)||((PointSet[i].y==PointSet[k].y)&&(PointSet[i].x<PointSet[k].x)))
-	    k=i;
-	tmp=PointSet[0];
-	PointSet[0]=PointSet[k];
-	PointSet[k]=tmp; //ÏÖÔÚPointSetÖĞy×ø±ê×îĞ¡µÄµãÔÚPointSet[0]
-	bp = PointSet[0];
-	sort(PointSet,PointSet+n,PolarComp);
-	ch[0]=PointSet[0];
-	ch[1]=PointSet[1];
-	ch[2]=PointSet[2];	
-	top=2;
-	for (i=3;i<n;i++)
-		{
-			while (multiply(PointSet[i],ch[top],ch[top-1])>=0 && top>0) top--;
-			if (top<0)break;
-			ch[++top]=PointSet[i];
-			}
-	len=top+1;
+    int i, j, k = 0, top = 2;
+    TPoint tmp;
+    //é€‰å–PointSetä¸­yåæ ‡æœ€å°çš„ç‚¹PointSet[k]ï¼Œå¦‚æœè¿™æ ·çš„ç‚¹å³å¤šä¸ªï¼Œåˆ™å–æœ€å·¦è¾¹çš„ä¸€ä¸ª
+    for ( i = 1; i < n; i++ )
+        if ( ( PointSet[i].y < PointSet[k].y ) || ( ( PointSet[i].y == PointSet[k].y ) && ( PointSet[i].x < PointSet[k].x ) ) )
+            k = i;
+    tmp = PointSet[0];
+    PointSet[0] = PointSet[k];
+    PointSet[k] = tmp; //ç°åœ¨PointSetä¸­yåæ ‡æœ€å°çš„ç‚¹åœ¨PointSet[0]
+    bp = PointSet[0];
+    sort ( PointSet, PointSet + n, PolarComp );
+    ch[0] = PointSet[0];
+    ch[1] = PointSet[1];
+    ch[2] = PointSet[2];
+    top = 2;
+    for ( i = 3; i < n; i++ )
+    {
+        while ( multiply ( PointSet[i], ch[top], ch[top - 1] ) >= 0 && top > 0 ) top--;
+        if ( top < 0 ) break;
+        ch[++top] = PointSet[i];
+    }
+    len = top + 1;
 }
 
-=====================================================================
-ÇóÖ±¾¶			Î´¿¼ÂÇ1e-8
-=====================================================================
 
-long Diameter(TPoint ch[],long len)
+
+
+
+== == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == =
+
+
+    æ±‚ç›´å¾„			æœªè€ƒè™‘1e-8
+
+
+    == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == == =
+
+
+
+
+
+        long Diameter ( TPoint ch[], long len )
+
+
 {
-	if (len==1) return 0;
-	if (len==2) return dis(ch[0],ch[1]);
-	int nu,nv,v,u,k;	
-	long re=0;
-	ch[len]=ch[0];
-	for (u=0,v=1;u<len;u=nu)
-	{
-		nu=u+1;
-		while(1)
-		{            
-			nv=(v+1)%len;
-			k=( (ch[nu].x-ch[u].x)*(ch[nv].y-ch[v].y) - 
-				(ch[nv].x-ch[v].x)*(ch[nu].y-ch[u].y));
-			if (k<=0) break;		
-			v=nv;			
-		}
-		re=max(re,dis(ch[u],ch[v]));
-		re=max(re,dis(ch[u],ch[nv]));
-	}
-	return re;
+    if ( len == 1 ) return 0;
+    if ( len == 2 ) return dis ( ch[0], ch[1] );
+    int nu, nv, v, u, k;
+    long re = 0;
+    ch[len] = ch[0];
+    for ( u = 0, v = 1; u < len; u = nu )
+    {
+        nu = u + 1;
+        while ( 1 )
+        {
+            nv = ( v + 1 ) % len;
+            k = ( ( ch[nu].x - ch[u].x ) * ( ch[nv].y - ch[v].y ) -
+                  ( ch[nv].x - ch[v].x ) * ( ch[nu].y - ch[u].y ) );
+            if ( k <= 0 ) break;
+            v = nv;
+        }
+        re = max ( re, dis ( ch[u], ch[v] ) );
+        re = max ( re, dis ( ch[u], ch[nv] ) );
+    }
+    return re;
 }
+

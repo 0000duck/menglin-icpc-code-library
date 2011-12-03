@@ -1,93 +1,125 @@
 /*Pku 1021  Intervals
- * ²î·ÖÔ¼ÊøÏµÍ³ BellmanFord ¶ÓÁĞÓÅ»¯°æ
+
+ * å·®åˆ†çº¦æŸç³»ç»Ÿ BellmanFord é˜Ÿåˆ—ä¼˜åŒ–ç‰ˆ
+
  * AC
+
 */
+
 #include <string.h>
+
 #include <stdio.h>
-const int maxn = 50010;//×î´ó¶¥µãÊı
-const int maxnum=0x7fffffff/4;
-int st,ed;
-int n;                                  //¶¥µãÊıÄ¿ 
-struct nodetype{
-                int v;                  //±íÖĞ¶¥µã 
-                int l;                   //¾àÀë 
-                nodetype *next;
-               };
-nodetype *map[maxn];   //ÁÚ½Ó±í 
-void add_edge(int a,int b,int l) //ÓÉaÏòbÁ¬Ò»ÌõÈ¨ÎªlµÄ±ß
+
+const int maxn = 50010;//æœ€å¤§é¡¶ç‚¹æ•°
+
+const int maxnum = 0x7fffffff / 4;
+
+int st, ed;
+
+int n;                                  //é¡¶ç‚¹æ•°ç›®
+
+struct nodetype
 {
-        nodetype *p=new nodetype;
-        p->next=map[a];
-        p->v=b;
-        p->l=l;
-        map[a]=p;
+
+    int v;                  //è¡¨ä¸­é¡¶ç‚¹
+
+    int l;                   //è·ç¦»
+
+    nodetype *next;
+
+};
+
+nodetype *map[maxn];   //é‚»æ¥è¡¨
+
+void add_edge ( int a, int b, int l ) //ç”±aå‘bè¿ä¸€æ¡æƒä¸ºlçš„è¾¹
+
+{
+    nodetype *p = new nodetype;
+    p->next = map[a];
+    p->v = b;
+    p->l = l;
+    map[a] = p;
 }
-int Q[maxn*100];
-short inQ[maxn+10];
+
+int Q[maxn * 100];
+
+short inQ[maxn + 10];
+
 void Bellmanford()
+
 {
-        int dis[maxn];
-        memset(Q,0,sizeof(Q));
-        memset(inQ,0,sizeof(inQ));
-        memset(dis,0,sizeof(dis));
-        
-        int h,t,i;
-        h=0;
-        for (i=st-1;i<=ed;i++)
+    int dis[maxn];
+    memset ( Q, 0, sizeof ( Q ) );
+    memset ( inQ, 0, sizeof ( inQ ) );
+    memset ( dis, 0, sizeof ( dis ) );
+    int h, t, i;
+    h = 0;
+    for ( i = st - 1; i <= ed; i++ )
+    {
+        h++;
+        Q[h] = i;
+        inQ[i] = 1;
+    }
+    t = h;
+    h = 1;
+    int count = 0;
+    int flag = 0;
+    while ( h <= t )
+    {
+        int x = Q[h];
+        inQ[x] = 0;
+        nodetype *p = map[x];                           // map[x]ä¸­æœ‰æ•ˆçš„éƒ¨åˆ†ä»map[x]å°±å¼€å§‹äº†
+        while ( p != NULL )
         {
-                h++;
-                Q[h]=i;
-                inQ[i]=1;
-        }
-        t=h;
-        h=1;
-        int count=0;
-        int flag=0;
-        while (h<=t)
-        {
-                int x=Q[h];
-                inQ[x]=0;
-                nodetype *p=map[x];                             // map[x]ÖĞÓĞĞ§µÄ²¿·Ö´Ómap[x]¾Í¿ªÊ¼ÁË
-                while (p!=NULL)
+            count++;
+            if ( p->l + dis[x] > dis[p->v] )          //æ­¤å¤„æ±‚æœ€é•¿è·¯å¾„
+            {
+                dis[p->v] = p->l + dis[x];
+                if ( !inQ[p->v] )
                 {
-                        count++;  
-                        if (p->l + dis[x] > dis[p->v])            //´Ë´¦Çó×î³¤Â·¾¶
-                        {
-                                dis[p->v] = p->l + dis[x];
-                                if (!inQ[p->v]) {t++;Q[t]=p->v;inQ[p->v]=1;}
-                        }
-                        p=p->next;
-              }
-              h++;
-              if (count>m*n) {flag=1;break;}//mÎª±ßÊı
-      }
-      //if (flag) ÓĞ»·
-      //disÒÑ¾­Éú³É
-      printf("%d\n",dis[ed]-dis[st-1]);
-}                
- int main()
- {
-         //freopen("1201.in","r",stdin);
-         scanf("%d",&n);
-         int i;
-         ed=0;
-         st=999999;
-         memset(map,0,sizeof(map));
-         for (i=1;i<=n;i++)
-         {
-                 int a,b,c;
-                 scanf("%d%d%d",&a,&b,&c);
-                 a++;
-                 b++;
-                 if (a<st) st=a;
-                 if (b>ed) ed=b;
-                 add_edge(a-1,b,c);
-         }
-         for (i=st;i<=ed;i++)
-         {
-                 add_edge(i-1,i,0);
-                 add_edge(i,i-1,-1);
-         }
-         Bellmanford();
-         return 0;
- }
+                    t++;
+                    Q[t] = p->v;
+                    inQ[p->v] = 1;
+                }
+            }
+            p = p->next;
+        }
+        h++;
+        if ( count > m * n )
+        {
+            flag = 1;  //mä¸ºè¾¹æ•°
+            break;
+        }
+    }
+    //if (flag) æœ‰ç¯
+    //diså·²ç»ç”Ÿæˆ
+    printf ( "%d\n", dis[ed] - dis[st - 1] );
+}
+
+int main()
+
+{
+    //freopen("1201.in","r",stdin);
+    scanf ( "%d", &n );
+    int i;
+    ed = 0;
+    st = 999999;
+    memset ( map, 0, sizeof ( map ) );
+    for ( i = 1; i <= n; i++ )
+    {
+        int a, b, c;
+        scanf ( "%d%d%d", &a, &b, &c );
+        a++;
+        b++;
+        if ( a < st ) st = a;
+        if ( b > ed ) ed = b;
+        add_edge ( a - 1, b, c );
+    }
+    for ( i = st; i <= ed; i++ )
+    {
+        add_edge ( i - 1, i, 0 );
+        add_edge ( i, i - 1, -1 );
+    }
+    Bellmanford();
+    return 0;
+}

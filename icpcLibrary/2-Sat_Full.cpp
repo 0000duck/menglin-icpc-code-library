@@ -1,273 +1,458 @@
-/*Èç¹ûÒ»¶¨ÒªÑ¡Ä³Ğ©µã£¬ÄÇÃ´¾Í°ÑËüµÄ¶ÔÁ¢µãÃ¬¶Üµô*/
+//2-SAT,
+
+
+
+
+
 #include <stdio.h>
+
+
 #include <memory.h>
+
+
 #include <algorithm>
+
+
 #include <vector>
+
+
 using namespace std;
 
-class Graph {
+
+
+
+
+class Graph
+{
+
+
+
+
 
 public:
-        //±ßµÄ×î´ó¹æÄ££¬¶¥µã×î´ó¹æÄ£
-        enum { MAX_NUM_EDGE = 1000010, MAX_NUM_NODE = 1010 };
 
-        //±ßµÄ¶¨Òå
-        struct Edge {
-                int to;
-                Edge *next;
-        }e[2*MAX_NUM_EDGE];
 
-        //Ã¿¸ö¶¥µãÁÚ½Ó±ß±íµÄ±íÍ·£¬±íÎ²£¨±í¿ÕÔòÎª0£©£¬ºÍÄæÏò±ß±í;
-        Edge *e_begin[MAX_NUM_NODE], *e_end[MAX_NUM_NODE], *e_reverse[MAX_NUM_NODE];
-        //"ĞÂÍ¼"µÄÁÚ½Ó±ß±í£¬"ĞÂÍ¼"ÓÉÔ­Í¼µÄ Ç¿Á¬Í¨·ÖÁ¿ ×é³É¡££¨¸Ã±íÌŞ³ıÖØ±ßºÍ×Ô»·£©
-        Edge *e_reduced[MAX_NUM_NODE];
-        //Ã¿¸ö¶¥µãËùÊôµÄÇ¿Á¬Í¨·ÖÁ¿±àºÅ£¨´Ó0¿ªÊ¼£©
-        int flag[MAX_NUM_NODE];
+    //è¾¹çš„æœ€å¤§è§„æ¨¡ï¼Œé¡¶ç‚¹æœ€å¤§è§„æ¨¡
 
-        //³õÊ¼»¯Í¼
-        void init( );
-        //²åÈëÒ»ÌõÓÉformÖ¸ÏòtoµÄ±ß
-        void insertEdge( int form, int to );
 
-        //ÇóÇ¿Á¬Í¨·ÖÁ¿
-        //nÎª¶¥µãÊıÁ¿, reduce±íÊ¾ÊÇ·ñÉú³É"ĞÂÍ¼"µÄÁÚ½Ó±ß±í£¬Éú³ÉĞÂÍ¼ºóÔ­Í¼µÄ±ß±íÊ§Ğ§
-        //·µ»ØÇ¿Á¬Í¨·ÖÁ¿¸öÊı
-        int Strongly_Connected_Component( int n, bool reduce = false );
-        int SCC_Num;
-        //Çó³öÒ»×é¿ÉĞĞ½â£¬µ«ÒªÏÈÖ´ĞĞÇ¿ÁªÍ¨·ÖÁ¿£¬²¢µÃµ½e_reduced
-        void Result();
+    enum
+    {
+
+
+        MAX_NUM_EDGE = 1000010, MAX_NUM_NODE = 1010
+
+
+    };
+
+
+
+
+
+    //è¾¹çš„å®šä¹‰
+
+
+    struct Edge
+    {
+
+
+        int to;
+
+
+        Edge *next;
+
+
+    } e[2 * MAX_NUM_EDGE];
+
+
+
+
+
+    //æ¯ä¸ªé¡¶ç‚¹é‚»æ¥è¾¹è¡¨çš„è¡¨å¤´ï¼Œè¡¨å°¾ï¼ˆè¡¨ç©ºåˆ™ä¸º0ï¼‰ï¼Œå’Œé€†å‘è¾¹è¡¨;
+
+
+    Edge *e_begin[MAX_NUM_NODE], *e_end[MAX_NUM_NODE], *e_reverse[MAX_NUM_NODE];
+
+
+    //"æ–°å›¾"çš„é‚»æ¥è¾¹è¡¨ï¼Œ"æ–°å›¾"ç”±åŸå›¾çš„ å¼ºè¿é€šåˆ†é‡ ç»„æˆã€‚ï¼ˆè¯¥è¡¨å‰”é™¤é‡è¾¹å’Œè‡ªç¯ï¼‰
+
+
+    Edge *e_reduced[MAX_NUM_NODE];
+
+
+    //æ¯ä¸ªé¡¶ç‚¹æ‰€å±çš„å¼ºè¿é€šåˆ†é‡ç¼–å·ï¼ˆä»0å¼€å§‹ï¼‰
+
+
+    int flag[MAX_NUM_NODE];
+
+
+
+
+
+    //åˆå§‹åŒ–å›¾
+
+
+    void init();
+
+
+    //æ’å…¥ä¸€æ¡ç”±formæŒ‡å‘toçš„è¾¹
+
+
+    void insertEdge ( int form, int to );
+
+
+
+
+
+    //æ±‚å¼ºè¿é€šåˆ†é‡
+
+
+    //nä¸ºé¡¶ç‚¹æ•°é‡, reduceè¡¨ç¤ºæ˜¯å¦ç”Ÿæˆ"æ–°å›¾"çš„é‚»æ¥è¾¹è¡¨ï¼Œç”Ÿæˆæ–°å›¾ååŸå›¾çš„è¾¹è¡¨å¤±æ•ˆ
+
+
+    //è¿”å›å¼ºè¿é€šåˆ†é‡ä¸ªæ•°
+
+
+    int Strongly_Connected_Component ( int n, bool reduce = false );
+
+
+    int SCC_Num;
+
+
+    //æ±‚å‡ºä¸€ç»„å¯è¡Œè§£ï¼Œä½†è¦å…ˆæ‰§è¡Œå¼ºè”é€šåˆ†é‡ï¼Œå¹¶å¾—åˆ°e_reduced
+
+
+    void Result();
+
+
+
+
 
 private:
-        int sign[MAX_NUM_NODE], count;
-        int en, n;
-        int st[MAX_NUM_NODE], sn;
-        bool reduce;
-        //¼ò»¯±ß±í
-        void Reduced( int m );
-        //Á½´ÎDFS
-        void DFS( int k );
-        void RDFS( int k );
+
+
+    int sign[MAX_NUM_NODE], count;
+
+
+    int en, n;
+
+
+    int st[MAX_NUM_NODE], sn;
+
+
+    bool reduce;
+
+
+    //ç®€åŒ–è¾¹è¡¨
+
+
+    void Reduced ( int m );
+
+
+    //ä¸¤æ¬¡DFS
+
+
+    void DFS ( int k );
+
+
+    void RDFS ( int k );
+
+
+
+
 
 };
 
+
+
+
+
 ///////////////////////////////////////////////////////
-//º¯ÊıÊµÏÖ
 
-void Graph::init( ) {
-        n = en = 0;
-        memset( e_begin, 0, sizeof e_begin );
-        memset( e_reverse, 0, sizeof e_reverse );
-        memset( e_end, 0, sizeof e_end );
+
+//å‡½æ•°å®ç°
+
+
+
+
+
+void Graph::init()
+{
+    n = en = 0;
+    memset ( e_begin, 0, sizeof e_begin );
+    memset ( e_reverse, 0, sizeof e_reverse );
+    memset ( e_end, 0, sizeof e_end );
 }
 
-void Graph::insertEdge( int from, int to ) {
-        //²åÈë±ß
-        e[en].to = to;
-        e[en].next = e_begin[from];
-        e_begin[from] = &e[en];
-        //ĞŞ¸Ä±ß±í½áÎ²
-        if( e_end[from] == 0 )
-                e_end[from] = &e[en];
-        en++;
-        //²åÈëÄæÏò±ß
-        e[en].to = from;
-        e[en].next = e_reverse[to];
-        e_reverse[to] = &e[en];
-        en++;
+
+
+
+
+void Graph::insertEdge ( int from, int to )
+{
+    //æ’å…¥è¾¹
+    e[en].to = to;
+    e[en].next = e_begin[from];
+    e_begin[from] = &e[en];
+    //ä¿®æ”¹è¾¹è¡¨ç»“å°¾
+    if ( e_end[from] == 0 )
+        e_end[from] = &e[en];
+    en++;
+    //æ’å…¥é€†å‘è¾¹
+    e[en].to = from;
+    e[en].next = e_reverse[to];
+    e_reverse[to] = &e[en];
+    en++;
 }
+
+
+
+
 
 //DFS
-void Graph::DFS( int k ) {
-        sign[k] = count;
-        for( Edge *p = e_begin[k]; p; p=p->next )
-                if( sign[p->to] != count )
-                        DFS( p->to );
-        st[ sn++ ] = k;
+
+
+void Graph::DFS ( int k )
+{
+    sign[k] = count;
+    for ( Edge *p = e_begin[k]; p; p = p->next )
+        if ( sign[p->to] != count )
+            DFS ( p->to );
+    st[sn++] = k;
 }
+
+
+
+
 
 //DFS2
-void Graph::RDFS( int k ) {
-        flag[k] = count;
-
-        //°Ñ ¶¥µãk µÄ±ß±í¼ÓÈëµ½ Ç¿Á¬Í¨·ÖÁ¿count µÄ±ß±íÖĞ
-        if( reduce && e_begin[k] ) {
-                e_end[k]->next = e_reduced[count];
-                e_reduced[count] = e_begin[k];
-        }
-
-        for( Edge *p = e_reverse[k]; p; p=p->next )
-                if( flag[p->to] == -1 )
-                        RDFS( p->to );
-}
-
-int Graph::Strongly_Connected_Component( int n, bool reduce/* = false */) {
-        int i, m;
-        this->n = n;
-        this->reduce = reduce;
-
-        //DFS
-        memset( sign, 0, sizeof sign );
-        sn = 0;
-        count = 1;
-
-        for( i=0; i<n; i++ )
-                if( sign[i] < count )
-                        DFS( i );
-
-        //DFS again
-        count = 0;
-        memset( flag, -1, sizeof sign );
-
-        if( reduce )
-                memset( e_reduced, 0, sizeof e_reduced );//³õÊ¼»¯ĞÂÍ¼±ß±í
 
 
-        while( sn-- ) { //°´³öÕ»Ë³ĞòÄæÏòDFS
-                if( flag[st[sn]] == -1 ) {
-                        //ĞÂµÄÇ¿Á¬Í¨·ÖÁ¿
-                        RDFS( st[sn] );
-                        count++;
-                }
-        }
-
-        m = count;
-        if( reduce )
-                Reduced( count );//¼ò»¯ĞÂÍ¼±ß±í
-        
-        SCC_Num = m;
-        return m;
-}
-
-void Graph::Reduced( int m ) {
-        int to;
-        count = 2;
-
-        for( int i=0; i<m; i++ ) {
-
-                Edge *t = 0;
-
-                for( Edge *q, *p = e_reduced[i]; p; p = q ) {
-                        q = p->next;
-                        to = flag[ p->to ];
-                        //if ²»ÊÇÖ¸Ïò×Ô¼º and ²»ÊÇÖØ±ß
-                        if( to != i && sign[to] < count ) {
-                                sign[to] = count;
-                                p->to = to;
-                                p->next = t;
-                                t = p;
-                        }
-                }
-
-                e_reduced[i] = t;
-                count ++; //count++ ±ÜÃâÇå³ısign
-        }
-}
-
-void Graph::Result()//ĞèÒª¶ÔĞÂÍ¼ÍØÆËÅÅĞò£¬È»ºó´Óµ×²ãÏòÉÏÕÒ
+void Graph::RDFS ( int k )
 {
-        int i;
-        int num=SCC_Num;
-        vector<int> pto[MAX_NUM_NODE];//´æ´¢Ö¸Ïò¸ÃµãµÄËùÓĞ
-        int opp[MAX_NUM_NODE];                //´æ´¢Ã¿¸öSCCµÄÏà¶Ôµã£¨¼´²»ÄÜÍ¬Ê±È¡µÄµã£©  
-        int indeg[MAX_NUM_NODE];
-        memset(indeg,0,sizeof(indeg));
-        int nodes[MAX_NUM_NODE],np=-1;
-        for (i=0;i<4;i++) //¶¥µãÊı£¬ÔİÊ±Îª8,i+4ÎªÆäÏà¶Ô¶¥µã
-        {
-                opp[flag[i]]=flag[i+4];
-                opp[flag[i+4]]=flag[i];
-        }
-        for (i=0;i<num;i++)
-        {
-                Edge *p = e_reduced[i];
-                while(p)
-                {
-                        pto[p->to].push_back(i);
-                        indeg[p->to]++;
-                        p=p->next;
-                }
-        }
-        for (i=0;i<num;i++)
-        {
-                if (indeg[i]==0) {np++;nodes[np]=i;}
-        }
-        int h=0;
-        while (h<=np)
-        {
-                int k=nodes[h];
-                Edge *p = e_reduced[k];
-                while (p)
-                {
-                        indeg[p->to]--;
-                        if (indeg[p->to]==0) {np++;nodes[np]=p->to;}
-                        p=p->next;
-                }
-                h++;
-        }
-        short color[MAX_NUM_NODE];//¸÷µã×ÅÉ«£¬1±íÊ¾Ñ¡È¡£¬2±íÊ¾²»ÄÜÑ¡
-        int d[MAX_NUM_NODE];
-        memset(color,0,sizeof(color));
-        int t;
-        int ii;
-        for (ii=np;ii>=0;ii--)
-        {
-                i=nodes[ii];
-                if (color[i]!=0) continue;
-                color[i]=1;
-                color[opp[i]]=2;
-                vector<int>::iterator p=pto[opp[i]].begin();
-                h=-1;
-                for (;p!=pto[opp[i]].end();p++)
-                {
-                        h++;
-                        d[h]=*p;
-                }
-                t=h;h=0;
-                while(h<=t)
-                {
-                        color[d[h]]=2;
-                        for (p=pto[d[h]].begin();p!=pto[d[h]].end();p++)
-                        {
-                                if (color[*p]!=0) continue;
-                                color[*p]=2;
-                                t++;
-                                d[t] = *p;
-                        }
-                        h++;
-                }
-        }
-        for (i=0;i<num;i++) printf("color[%d]==%d\n",i,color[i]);
-        for (i=0;i<4;i++)//´Ë´¦½Úµã×ÜÊıÎª£¸
-        {                
-                if (color[flag[i]]==1) printf("%d ",i);
-                else printf("%d ",i+4);
-        }
-        printf("\n");
+    flag[k] = count;
+    //æŠŠ é¡¶ç‚¹k çš„è¾¹è¡¨åŠ å…¥åˆ° å¼ºè¿é€šåˆ†é‡count çš„è¾¹è¡¨ä¸­
+    if ( reduce && e_begin[k] )
+    {
+        e_end[k]->next = e_reduced[count];
+        e_reduced[count] = e_begin[k];
+    }
+    for ( Edge *p = e_reverse[k]; p; p = p->next )
+        if ( flag[p->to] == -1 )
+            RDFS ( p->to );
 }
+
+
+
+
+
+int Graph::Strongly_Connected_Component ( int n, bool reduce/* = false */ )
+{
+    int i, m;
+    this->n = n;
+    this->reduce = reduce;
+    //DFS
+    memset ( sign, 0, sizeof sign );
+    sn = 0;
+    count = 1;
+    for ( i = 0; i < n; i++ )
+        if ( sign[i] < count )
+            DFS ( i );
+    //DFS again
+    count = 0;
+    memset ( flag, -1, sizeof sign );
+    if ( reduce )
+        memset ( e_reduced, 0, sizeof e_reduced ); //åˆå§‹åŒ–æ–°å›¾è¾¹è¡¨
+    while ( sn-- ) //æŒ‰å‡ºæ ˆé¡ºåºé€†å‘DFS
+    {
+        if ( flag[st[sn]] == -1 )
+        {
+            //æ–°çš„å¼ºè¿é€šåˆ†é‡
+            RDFS ( st[sn] );
+            count++;
+        }
+    }
+    m = count;
+    if ( reduce )
+        Reduced ( count ); //ç®€åŒ–æ–°å›¾è¾¹è¡¨
+    SCC_Num = m;
+    return m;
+}
+
+
+
+
+
+void Graph::Reduced ( int m )
+{
+    int to;
+    count = 2;
+    for ( int i = 0; i < m; i++ )
+    {
+        Edge *t = 0;
+        for ( Edge * q, *p = e_reduced[i]; p; p = q )
+        {
+            q = p->next;
+            to = flag[p->to];
+            //if ä¸æ˜¯æŒ‡å‘è‡ªå·± and ä¸æ˜¯é‡è¾¹
+            if ( to != i && sign[to] < count )
+            {
+                sign[to] = count;
+                p->to = to;
+                p->next = t;
+                t = p;
+            }
+        }
+        e_reduced[i] = t;
+        count++; //count++ é¿å…æ¸…é™¤sign
+    }
+}
+
+
+
+
+
+void Graph::Result() //éœ€è¦å¯¹æ–°å›¾æ‹“æ‰‘æ’åºï¼Œç„¶åä»åº•å±‚å‘ä¸Šæ‰¾
+
+
+{
+    int i;
+    int num = SCC_Num;
+    vector<int> pto[MAX_NUM_NODE]; //å­˜å‚¨æŒ‡å‘è¯¥ç‚¹çš„æ‰€æœ‰
+    int opp[MAX_NUM_NODE]; //å­˜å‚¨æ¯ä¸ªSCCçš„ç›¸å¯¹ç‚¹ï¼ˆå³ä¸èƒ½åŒæ—¶å–çš„ç‚¹ï¼‰
+    int indeg[MAX_NUM_NODE];
+    memset ( indeg, 0, sizeof ( indeg ) );
+    int nodes[MAX_NUM_NODE], np = -1;
+    for ( i = 0; i < 4; i++ ) //é¡¶ç‚¹æ•°ï¼Œæš‚æ—¶ä¸º8,i+4ä¸ºå…¶ç›¸å¯¹é¡¶ç‚¹
+    {
+        opp[flag[i]] = flag[i + 4];
+        opp[flag[i + 4]] = flag[i];
+    }
+    for ( i = 0; i < num; i++ )
+    {
+        Edge *p = e_reduced[i];
+        while ( p )
+        {
+            pto[p->to].push_back ( i );
+            indeg[p->to]++;
+            p = p->next;
+        }
+    }
+    for ( i = 0; i < num; i++ )
+    {
+        if ( indeg[i] == 0 )
+        {
+            np++;
+            nodes[np] = i;
+        }
+    }
+    int h = 0;
+    while ( h <= np )
+    {
+        int k = nodes[h];
+        Edge *p = e_reduced[k];
+        while ( p )
+        {
+            indeg[p->to]--;
+            if ( indeg[p->to] == 0 )
+            {
+                np++;
+                nodes[np] = p->to;
+            }
+            p = p->next;
+        }
+        h++;
+    }
+    short color[MAX_NUM_NODE]; //å„ç‚¹ç€è‰²ï¼Œ1è¡¨ç¤ºé€‰å–ï¼Œ2è¡¨ç¤ºä¸èƒ½é€‰
+    int d[MAX_NUM_NODE];
+    memset ( color, 0, sizeof ( color ) );
+    int t;
+    int ii;
+    for ( ii = np; ii >= 0; ii-- )
+    {
+        i = nodes[ii];
+        if ( color[i] != 0 )
+            continue;
+        color[i] = 1;
+        color[opp[i]] = 2;
+        vector<int>::iterator p = pto[opp[i]].begin();
+        h = -1;
+        for ( ; p != pto[opp[i]].end(); p++ )
+        {
+            h++;
+            d[h] = *p;
+        }
+        t = h;
+        h = 0;
+        while ( h <= t )
+        {
+            color[d[h]] = 2;
+            for ( p = pto[d[h]].begin(); p != pto[d[h]].end(); p++ )
+            {
+                if ( color[*p] != 0 )
+                    continue;
+                color[*p] = 2;
+                t++;
+                d[t] = *p;
+            }
+            h++;
+        }
+    }
+    for ( i = 0; i < num; i++ )
+        printf ( "color[%d]==%d\n", i, color[i] );
+    for ( i = 0; i < 4; i++ ) //æ­¤å¤„èŠ‚ç‚¹æ€»æ•°ä¸ºï¼˜
+    {
+        if ( color[flag[i]] == 1 )
+            printf ( "%d ", i );
+        else
+            printf ( "%d ", i + 4 );
+    }
+    printf ( "\n" );
+}
+
+
+
+
 
 Graph g;
 
+
+
+
+
 int main()
 {
-        g.init();
-        g.insertEdge(0,1);g.insertEdge(1,0);g.insertEdge(4,5);
-        g.insertEdge(5,4);g.insertEdge(1,7);g.insertEdge(3,5);
-        int num = g.Strongly_Connected_Component(8,true);
-        int i;
-        printf("num = %d\n",num);
-        for (i=0;i<8;i++) printf("flag[%d] == %d\n",i,g.flag[i]);
-        for (i=0;i<num;i++)
+    g.init();
+    g.insertEdge ( 0, 1 );
+    g.insertEdge ( 1, 0 );
+    g.insertEdge ( 4, 5 );
+    g.insertEdge ( 5, 4 );
+    g.insertEdge ( 1, 7 );
+    g.insertEdge ( 3, 5 );
+    int num = g.Strongly_Connected_Component ( 8, true );
+    int i;
+    printf ( "num = %d\n", num );
+    for ( i = 0; i < 8; i++ )
+        printf ( "flag[%d] == %d\n", i, g.flag[i] );
+    for ( i = 0; i < num; i++ )
+    {
+        Graph::Edge *p = g.e_reduced[i];
+        while ( p )
         {
-                Graph::Edge *p = g.e_reduced[i];
-                while (p)
-                {
-                         printf("%d ",p->to);
-                         p=p->next;
-                }
-                printf("is connected to component %d.\n",i);
+            printf ( "%d ", p->to );
+            p = p->next;
         }
-        for (i=0;i<4;i++) if (g.flag[i]==g.flag[i+4]) {printf("No solution.\n");return 0;}
-        g.Result();    
-        return 0;
+        printf ( "is connected to component %d.\n", i );
+    }
+    for ( i = 0; i < 4; i++ )
+        if ( g.flag[i] == g.flag[i + 4] )
+        {
+            printf ( "No solution.\n" );
+            return 0;
+        }
+    g.Result();
+    return 0;
 }
+
+
+
 

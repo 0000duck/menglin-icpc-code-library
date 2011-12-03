@@ -1,35 +1,83 @@
 /*======================================================
 
-      µ¥Ô´×î¶ÌÂ·¾¶
-
-   Bellman-Ford Ëã·¨
-
- ÊÊÓÃÌõ¼ş£ºËùÓĞÇé¿ö£¬±ßÈ¨¿ÉÒÔÎª¸º
- GÎªÍ¼£¬nÎªÍ¼µÄ½ÚµãÊıÄ¿,s,t·Ö±ğÎªÔ´µãºÍÖÕµã,
- successÓÃÀ´±êÊ¾¸Ãº¯ÊıÊÇ·ñ³É¹¦£¬
- Èç¹û´æÔÚÒ»¸ö´ÓÔ´µã¿É´ïµÄÈ¨Îª¸ºµÄ»ØÂ·Ôòsuccess=false;
- ·µ»ØÖµÎªs,tÖ®¼äµÄ×î¶ÌÂ·¾¶³¤¶È£»
 
 
-            !!×¢Òâ£º
-            1.¶¥µã±êºÅ´Ó0¿ªÊ¼
-            2.µ±i,j²»ÏàÁÚÊ±G[i,j]=infinity
+
+
+      å•æºæœ€çŸ­è·¯å¾„
+
+
+
+
+
+   Bellman-Ford ç®—æ³•
+
+
+
+
+
+ é€‚ç”¨æ¡ä»¶ï¼šæ‰€æœ‰æƒ…å†µï¼Œè¾¹æƒå¯ä»¥ä¸ºè´Ÿ
+
+
+ Gä¸ºå›¾ï¼Œnä¸ºå›¾çš„èŠ‚ç‚¹æ•°ç›®,s,tåˆ†åˆ«ä¸ºæºç‚¹å’Œç»ˆç‚¹,
+
+
+ successç”¨æ¥æ ‡ç¤ºè¯¥å‡½æ•°æ˜¯å¦æˆåŠŸï¼Œ
+
+
+ å¦‚æœå­˜åœ¨ä¸€ä¸ªä»æºç‚¹å¯è¾¾çš„æƒä¸ºè´Ÿçš„å›è·¯åˆ™success=false;
+
+
+ è¿”å›å€¼ä¸ºs,tä¹‹é—´çš„æœ€çŸ­è·¯å¾„é•¿åº¦ï¼›
+
+
+
+
+
+
+
+
+            !!æ³¨æ„ï¼š
+
+
+            1.é¡¶ç‚¹æ ‡å·ä»0å¼€å§‹
+
+
+            2.å½“i,jä¸ç›¸é‚»æ—¶G[i,j]=infinity
+
+
+
+
 
 =============================================================*/
 
-int Bellman_Ford(Graph G,int n,int s,int t,int path[],int success)
+
+
+
+
+int Bellman_Ford ( Graph G, int n, int s, int t, int path[], int success )
+
+
 {
-   int i,j,k,d[max_vertexes];
-   for (i=0;i<n;i++) {d[i]=infinity;path[i]=0;}
-   d[s]=0;
-   for (k=1;k<n;k++)
-    for (i=0;i<n;i++)
-     for (j=0;j<n;j++)
-       if (d[j]>d[i]+G[i][j]) {d[j]=d[i]+G[i][j];path[j]=i;}
-   success=0;
-   for (i=0;i<n;i++)
-    for (j=0;j<n;j++)
-     if (d[j]>d[i]+G[i][j]) return 0;
-   success=1;
-   return d[t];
- }
+    int i, j, k, d[max_vertexes];
+    for ( i = 0; i < n; i++ )
+    {
+        d[i] = infinity;
+        path[i] = 0;
+    }
+    d[s] = 0;
+    for ( k = 1; k < n; k++ )
+        for ( i = 0; i < n; i++ )
+            for ( j = 0; j < n; j++ )
+                if ( d[j] > d[i] + G[i][j] )
+                {
+                    d[j] = d[i] + G[i][j];
+                    path[j] = i;
+                }
+    success = 0;
+    for ( i = 0; i < n; i++ )
+        for ( j = 0; j < n; j++ )
+            if ( d[j] > d[i] + G[i][j] ) return 0;
+    success = 1;
+    return d[t];
+}

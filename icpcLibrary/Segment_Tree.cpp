@@ -1,101 +1,162 @@
 /*
+
+
   Name:  Segment Tree
+
+
   Copyright: LogicalMars Library
+
+
   Author: LogicalMars
+
+
   Date: 15-10-08 13:22
-  Description: Ïß¶ÎÊı£¬²åÈë£¬É¾³ı£¬²éÕÒÍ³¼Æ
+
+
+  Description: çº¿æ®µæ•°ï¼Œæ’å…¥ï¼Œåˆ é™¤ï¼ŒæŸ¥æ‰¾ç»Ÿè®¡
+
+
 */
+
+
 #include <stdio.h>
+
+
 #include <string.h>
-const long maxn=20000;
+
+
+const long maxn = 20000;
+
+
 struct treetype
+
+
 {
-    long a,b;       //×óÓÒ·¶Î§		!!×¢ÒâÊÇµã
-    long left,right;//×óÓÒ¶ù×Ó
-    long cover;     //¸²¸Ç
-    long bj;        //É¾³ı±ê¼Ç,-1±íÊ¾ÒÑ±»É¾³ı
-}tree[maxn];
-long tot;           //treeÖ¸Õë
+
+
+    long a, b;      //å·¦å³èŒƒå›´		!!æ³¨æ„æ˜¯ç‚¹
+
+
+    long left, right; //å·¦å³å„¿å­
+
+
+    long cover;     //è¦†ç›–
+
+
+    long bj;        //åˆ é™¤æ ‡è®°,-1è¡¨ç¤ºå·²è¢«åˆ é™¤
+
+
+} tree[maxn];
+
+
+long tot;           //treeæŒ‡é’ˆ
+
+
 long Ans;
-void maketree(long a,long b)
+
+
+void maketree ( long a, long b )
+
+
 {
     tot++;
-    int now=tot;
-    tree[now].a=a;
-    tree[now].b=b;
-    if (a+1<b)
+    int now = tot;
+    tree[now].a = a;
+    tree[now].b = b;
+    if ( a + 1 < b )
     {
-        tree[now].left=tot+1;
-        maketree(a,(a+b)/2);
-        tree[now].right=tot+1;
-        maketree((a+b)/2,b);
+        tree[now].left = tot + 1;
+        maketree ( a, ( a + b ) / 2 );
+        tree[now].right = tot + 1;
+        maketree ( ( a + b ) / 2, b );
     }
 }
+
+
 void init()
+
+
 {
-    memset(tree,0,sizeof(tree));
-    tot=0;
-    Ans=0;
+    memset ( tree, 0, sizeof ( tree ) );
+    tot = 0;
+    Ans = 0;
     //maketree( , );
 }
-void clean(long num)//¸üĞÂ±ê¼ÇµÄ¹ı³Ì
+
+
+void clean ( long num ) //æ›´æ–°æ ‡è®°çš„è¿‡ç¨‹
+
+
 {
-    tree[num].cover=0;
-    tree[num].bj=0;
-    tree[tree[num].left].bj=-1;
-    tree[tree[num].right].bj=-1;
+    tree[num].cover = 0;
+    tree[num].bj = 0;
+    tree[tree[num].left].bj = -1;
+    tree[tree[num].right].bj = -1;
 }
-void insert(long num,long c,long d);//²åÈëÏß¶Î
+
+
+void insert ( long num, long c, long d ); //æ’å…¥çº¿æ®µ
+
+
 {
     long mid;
-    if (tree[num].bj==-1) clean(num);
-    if (tree[num].cover==1) return;
-    if (c<=tree[num].a && d>=tree[num].b)
+    if ( tree[num].bj == -1 ) clean ( num );
+    if ( tree[num].cover == 1 ) return;
+    if ( c <= tree[num].a && d >= tree[num].b )
     {
-        tree[num].cover=1;
+        tree[num].cover = 1;
     }
     else
     {
-        mid=(tree[num].a + tree[num].b)/2;
-        if (c<mid) insert(tree[num].left,c,d);
-        if (d>mid) insert(tree[num].right,c,d);
+        mid = ( tree[num].a + tree[num].b ) / 2;
+        if ( c < mid ) insert ( tree[num].left, c, d );
+        if ( d > mid ) insert ( tree[num].right, c, d );
     }
 }
-void del(long num,long c,long d)//É¾³ıÏß¶Î
+
+
+void del ( long num, long c, long d ) //åˆ é™¤çº¿æ®µ
+
+
 {
     long mid;
-    if (tree[num].b==-1) return;
-    if (c<=tree[num].a && d>=tree[num].b)
+    if ( tree[num].b == -1 ) return;
+    if ( c <= tree[num].a && d >= tree[num].b )
     {
-        tree[num].cover=0;
-        tree[tree[num].left].bj=-1;
-        tree[tree[num].right].bj=-1;
+        tree[num].cover = 0;
+        tree[tree[num].left].bj = -1;
+        tree[tree[num].right].bj = -1;
         return;
     }
-    if (tree[num].cover==1)
+    if ( tree[num].cover == 1 )
     {
-        tree[num].cover=0;
-        tree[tree[num].left].bj=-1;
-        tree[tree[num].right].bj=-1;
-        if (tree[num].a<c) insert(num,tree[num].a,c);
-        if (d<tree[num].b) insert(num,d,tree[num].b);
+        tree[num].cover = 0;
+        tree[tree[num].left].bj = -1;
+        tree[tree[num].right].bj = -1;
+        if ( tree[num].a < c ) insert ( num, tree[num].a, c );
+        if ( d < tree[num].b ) insert ( num, d, tree[num].b );
     }
     else
     {
-        mid=(tree[num].a + tree[num])/2;
-        if (c<mid) del(tree[num].left,c,d);
-        if (d>mid) del(tree[num].right,c,d);
+        mid = ( tree[num].a + tree[num] ) / 2;
+        if ( c < mid ) del ( tree[num].left, c, d );
+        if ( d > mid ) del ( tree[num].right, c, d );
     }
 }
-void calc(long num)//Í³¼Æ±»¸²¸ÇµÄ³¤¶È£¬¼Óµ½AnsÖĞ£¬ÒªÇóAnsÖ®Ç°ÒªÇåÁã
+
+
+void calc ( long num ) //ç»Ÿè®¡è¢«è¦†ç›–çš„é•¿åº¦ï¼ŒåŠ åˆ°Ansä¸­ï¼Œè¦æ±‚Ansä¹‹å‰è¦æ¸…é›¶
+
+
 {
-    if (num==0) return;
-    if (tree[num].bj==-1) return;
-    if (tree[num].cover==1)
+    if ( num == 0 ) return;
+    if ( tree[num].bj == -1 ) return;
+    if ( tree[num].cover == 1 )
     {
-        Ans+=tree[num].b-tree[num].a;
+        Ans += tree[num].b - tree[num].a;
         return;
     }
-    calc(tree[num].left);
-    calc(tree[num].right);
+    calc ( tree[num].left );
+    calc ( tree[num].right );
 }
+

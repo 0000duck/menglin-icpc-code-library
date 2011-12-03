@@ -1,46 +1,75 @@
 /*
+
+
   Name: Disjoint Net
+
+
   Copyright: LogicalMars Library
+
+
   Author: LogicalMars
+
+
   Date: 12-10-08 19:04
-  Description: father[i]±íÊ¾iµÄ¸¸½Úµã£¬³õÊ¼Ê±father[i]=i; 
+
+
+  Description: father[i]è¡¨ç¤ºiçš„çˆ¶èŠ‚ç‚¹ï¼Œåˆå§‹æ—¶father[i]=i;
+
+
 */
-int find_father(int x)//¸¸×Ó¹ØÏµ½öÎª´æÔÚÊ±µÄ¼òµ¥³ÌĞò´¦Àí 
+
+
+int find_father ( int x ) //çˆ¶å­å…³ç³»ä»…ä¸ºå­˜åœ¨æ—¶çš„ç®€å•ç¨‹åºå¤„ç†
+
+
 {
-    int i,f,next,j;
-    i=x;    
-    while (father[i]!=i) i=father[i];
-    f=i;
-    
-    i=x;
-    while (i!=f)
+    int i, f, next, j;
+    i = x;
+    while ( father[i] != i ) i = father[i];
+    f = i;
+    i = x;
+    while ( i != f )
     {
-        next=father[i];
-        father[i]=f;        
-        i=next;
-    }    
-    
+        next = father[i];
+        father[i] = f;
+        i = next;
+    }
     return f;
 }
 
-long fath(long p)//¸¸×Ó¹ØÏµ¶àÑùÊ±£¬ch[i] Îª iÓë¸¸½ÚµãµÄ¹ØÏµ 
- {
-  if (fa[p]==p) return p;
-  if (fa[fa[p]]==fa[p]) return fa[p];
-  long k=fath(fa[p]);
-  ch[p]=mod3(ch[fa[p]]+ch[p]);
-  fa[p]=k;
-  return k;
- }
- 
-void add(long x,long y)
+
+
+
+
+long fath ( long p ) //çˆ¶å­å…³ç³»å¤šæ ·æ—¶ï¼Œch[i] ä¸º iä¸çˆ¶èŠ‚ç‚¹çš„å…³ç³»
+
+
 {
-    long px=find_father(x);
-    long py=find_father(y);
-    if (px!=py)
+    if ( fa[p] == p ) return p;
+    if ( fa[fa[p]] == fa[p] ) return fa[p];
+    long k = fath ( fa[p] );
+    ch[p] = mod3 ( ch[fa[p]] + ch[p] );
+    fa[p] = k;
+    return k;
+}
+
+
+
+
+
+void add ( long x, long y )
+
+
+{
+    long px = find_father ( x );
+    long py = find_father ( y );
+    if ( px != py )
     {
-        father[px]=py;
+        father[px] = py;
         //ch[i]=
     }
 }
+
+
+
 

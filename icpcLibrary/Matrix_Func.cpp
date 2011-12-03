@@ -1,64 +1,101 @@
 /*
-  Name: ¾ØÕó³Ë·¨Çó½âµİÍÆ·½³Ì 
+
+
+  Name: çŸ©é˜µä¹˜æ³•æ±‚è§£é€’æ¨æ–¹ç¨‹
+
+
   Copyright: LogicalMars Library
+
+
   Author: LogicalMars
+
+
   Date: 13-10-08 22:59
-  Description: An = Sum(Xi * A(n-i)),i=1,2,...,k,¹¹Ôì¾ØÕóA =£¨A1,A2,...,Ak),
-               ¾ØÕó Matrix, ÓĞÈçÏÂÌØÕ÷£ºËüµÄ´óĞ¡Îªk*k£»ËüµÄµÚkÁĞÎªx1ÖÁxk£¬×¢ÒâÎªµ¹Ğò£¬¼´µİÍÆ¹ØÏµÖĞµÄÏµÊı£» 
-               µÚi(1<=i<=k)ÁĞÖĞ³ıµÚi+1ĞĞÔªËØÎª1Íâ£¬ÆäÓàÔªËØ¾ùÎª0¡£
-               
-               ±¾³ÌĞò An = An-1 + 2 * An-2, A1=1,A0=0;
+
+
+  Description: An = Sum(Xi * A(n-i)),i=1,2,...,k,æ„é€ çŸ©é˜µA =ï¼ˆA1,A2,...,Ak),
+
+
+               çŸ©é˜µ Matrix, æœ‰å¦‚ä¸‹ç‰¹å¾ï¼šå®ƒçš„å¤§å°ä¸ºk*kï¼›å®ƒçš„ç¬¬kåˆ—ä¸ºx1è‡³xkï¼Œæ³¨æ„ä¸ºå€’åºï¼Œå³é€’æ¨å…³ç³»ä¸­çš„ç³»æ•°ï¼›
+
+
+               ç¬¬i(1<=i<=k)åˆ—ä¸­é™¤ç¬¬i+1è¡Œå…ƒç´ ä¸º1å¤–ï¼Œå…¶ä½™å…ƒç´ å‡ä¸º0ã€‚
+
+
+
+
+
+               æœ¬ç¨‹åº An = An-1 + 2 * An-2, A1=1,A0=0;
+
+
 */
+
+
 #include <stdio.h>
+
+
 #include <string.h>
-long Matrix[50][50],m[50][50];
+
+
+long Matrix[50][50], m[50][50];
+
+
 long A[50];
-int k,n;
+
+
+int k, n;
+
+
 int main()
+
+
 {
-    freopen("matrix.in","r",stdin);
-    freopen("matrix.out","w",stdout);
-    for (n=1;n<=30;n++)
+    freopen ( "matrix.in", "r", stdin );
+    freopen ( "matrix.out", "w", stdout );
+    for ( n = 1; n <= 30; n++ )
     {
-        //                                          ³õÊ¼»¯ 
-        k=2;
-        memset(Matrix,0,sizeof(Matrix));
-        Matrix[1][2]=2;Matrix[2][1]=1;Matrix[2][2]=1;//¹¹ÔìÏµÊı¾ØÕó 
-        A[1]=0;A[2]=1;          //AÎª³õÖµ¾ØÕó    
-        
-        memset(m,0,sizeof(m)); //mÎªk½×µÄµ¥Î»¾ØÕó 
-        m[1][1]=1; m[2][2]=1;
-        //--------------------------------------------------- 
-        
-        int nn=n-1;              //¶ş·Ö·¨¼ÆËãAn                   
-        while (nn)
-        {   
-            int i,j,t;
+        //                                          åˆå§‹åŒ–
+        k = 2;
+        memset ( Matrix, 0, sizeof ( Matrix ) );
+        Matrix[1][2] = 2;
+        Matrix[2][1] = 1;
+        Matrix[2][2] = 1; //æ„é€ ç³»æ•°çŸ©é˜µ
+        A[1] = 0;
+        A[2] = 1;        //Aä¸ºåˆå€¼çŸ©é˜µ
+        memset ( m, 0, sizeof ( m ) ); //mä¸ºké˜¶çš„å•ä½çŸ©é˜µ
+        m[1][1] = 1;
+        m[2][2] = 1;
+        //---------------------------------------------------
+        int nn = n - 1;          //äºŒåˆ†æ³•è®¡ç®—An
+        while ( nn )
+        {
+            int i, j, t;
             int m3[50][50];
-            if (nn%2==1) 
+            if ( nn % 2 == 1 )
             {
-                memset(m3,0,sizeof(m3));
-                for (i=1;i<=k;i++)
+                memset ( m3, 0, sizeof ( m3 ) );
+                for ( i = 1; i <= k; i++ )
                 {
-                    for (j=1;j<=k;j++)
+                    for ( j = 1; j <= k; j++ )
                     {
-                        for (t=1;t<=k;t++) m3[i][j]+=m[i][t] * Matrix[t][j];
+                        for ( t = 1; t <= k; t++ ) m3[i][j] += m[i][t] * Matrix[t][j];
                     }
                 }
-                memcpy(m,m3,sizeof(m3));
-            } 
-            nn/=2;        
-            memset(m3,0,sizeof(m3));
-            for (i=1;i<=k;i++)
+                memcpy ( m, m3, sizeof ( m3 ) );
+            }
+            nn /= 2;
+            memset ( m3, 0, sizeof ( m3 ) );
+            for ( i = 1; i <= k; i++ )
             {
-                for (j=1;j<=k;j++)
+                for ( j = 1; j <= k; j++ )
                 {
-                    for (t=1;t<=k;t++) m3[i][j]+=Matrix[i][t] * Matrix[t][j];
+                    for ( t = 1; t <= k; t++ ) m3[i][j] += Matrix[i][t] * Matrix[t][j];
                 }
             }
-            memcpy(Matrix,m3,sizeof(m3));                
+            memcpy ( Matrix, m3, sizeof ( m3 ) );
         }
-        printf(" n=%ld ,%lld\n",n,A[1]*m[1][2]+A[2]*m[2][2]);
+        printf ( " n=%ld ,%lld\n", n, A[1]*m[1][2] + A[2]*m[2][2] );
     }
     return 0;
 }
+

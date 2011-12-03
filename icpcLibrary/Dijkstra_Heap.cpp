@@ -1,124 +1,204 @@
 /*
-  Name: Dijkstra Heap°æ 
-  Copyright: LogicalMars    
-  Author: LogicalMars  
+
+
+  Name: Dijkstra Heapç‰ˆ
+
+
+  Copyright: LogicalMars
+
+
+  Author: LogicalMars
+
+
   Date: 12-10-08 12:52
-  Description: ÁÚ½Ó±íÊı¾İ½á¹¹ 
+
+
+  Description: é‚»æ¥è¡¨æ•°æ®ç»“æ„
+
+
 */
+
+
 using namespace std;
+
+
 #include <fstream>
+
+
 #include <string.h>
-ifstream fin("butter.in");
-ofstream fout("butter.out");
-const long maxnum=0x7fffffff/4;
-const long maxn=810;  //×î´ó¶¥µãÊı 
-int n;                //¶¥µãÊıÄ¿ 
-struct nodetype{
-                int v;//±íÖĞ¶¥µã 
-                int l;//¾àÀë 
-                nodetype *next;
-               };
-nodetype *map[maxn];//ÁÚ½Ó±í 
+
+
+ifstream fin ( "butter.in" );
+
+
+ofstream fout ( "butter.out" );
+
+
+const long maxnum = 0x7fffffff / 4;
+
+
+const long maxn = 810; //æœ€å¤§é¡¶ç‚¹æ•°
+
+
+int n;                //é¡¶ç‚¹æ•°ç›®
+
+
+struct nodetype
+{
+
+
+    int v;//è¡¨ä¸­é¡¶ç‚¹
+
+
+    int l;//è·ç¦»
+
+
+    nodetype *next;
+
+
+};
+
+
+nodetype *map[maxn];//é‚»æ¥è¡¨
+
+
 long q[maxn];
+
+
 long qpos[maxn];
+
+
 long dis[maxn];
+
+
 long qtot;          //Heap
-void swap(int i,int j)
- {
-  long k=q[i];
-  q[i]=q[j];
-  q[j]=k;
-  qpos[q[i]]=i;
-  qpos[q[j]]=j;
- }
-void up(int i)
- {
-  int j=i/2;				//jÒ»¶¨ÊÇiµÄ¸¸Ç×
-  while (dis[q[j]]>dis[q[i]] && j>=1)
-   {
-    swap(j,i);
-    i=j;j=i/2;
-   }
- }
-void down(int i)
- {
-  int j;
-  do
-   {
-    j=i;
-    long min=maxnum;//Ïàµ±µÄ¹Ø¼ü£¬min´æµÄÊÇ¶ù×ÓÖĞ×îĞ¡µÄÒ»¸ö
-    if (i*2+1<=qtot && dis[q[i*2+1]]<min) {min=dis[q[i*2+1]];i=i*2+1;}
-    if (j*2<=qtot && dis[q[j*2]]<min) {min=dis[q[j*2]];i=j*2;}
-    if (min<dis[q[j]]) swap(i,j);
-   }while (i!=j);
- }
 
-void relax(int i,int j,int w)
- {
-  if (w>=dis[j]) return;
-  dis[j]=w;
-  up(qpos[j]);
- }
-long dijkstra(int s)
- {
-  int i,j;
-  for (i=1;i<=n;i++)
-   {
-    dis[i]=maxnum;
-    q[i]=i;
-    qpos[i]=i;
-   }
-  swap(s,1);
-  qtot=n;
-  dis[s]=0;
-  
-  while (qtot>1)
-   {
-    i=q[1];
-    swap(1,qtot);//±£Ö¤qposÒ²¸ÄÁË£¬ËùÒÔq[1]=q[qtot]ÊÇ´íµÄ
-    qtot--;
 
-    down(1);
-    
-    nodetype *p=map[i];
-    while (p)
-     {
-      if (qpos[p->v]<=qtot) relax(i,p->v,dis[i]+p->l);
-      p=p->next;
-     }
-   }
-   
-  //disÒÑ¾­²úÉú 
-  long sum=0;
-  for (i=1;i<=n;i++)
-   {
-    if (dis[i]==maxnum) continue;
-    if (dis[i]>0) sum+=dis[i]; 
-   }
-  return sum;
- }
+void swap ( int i, int j )
+
+
+{
+    long k = q[i];
+    q[i] = q[j];
+    q[j] = k;
+    qpos[q[i]] = i;
+    qpos[q[j]] = j;
+}
+
+
+void up ( int i )
+
+
+{
+    int j = i / 2;				//jä¸€å®šæ˜¯içš„çˆ¶äº²
+    while ( dis[q[j]] > dis[q[i]] && j >= 1 )
+    {
+        swap ( j, i );
+        i = j;
+        j = i / 2;
+    }
+}
+
+
+void down ( int i )
+
+
+{
+    int j;
+    do
+    {
+        j = i;
+        long min = maxnum; //ç›¸å½“çš„å…³é”®ï¼Œminå­˜çš„æ˜¯å„¿å­ä¸­æœ€å°çš„ä¸€ä¸ª
+        if ( i * 2 + 1 <= qtot && dis[q[i * 2 + 1]] < min )
+        {
+            min = dis[q[i * 2 + 1]];
+            i = i * 2 + 1;
+        }
+        if ( j * 2 <= qtot && dis[q[j * 2]] < min )
+        {
+            min = dis[q[j * 2]];
+            i = j * 2;
+        }
+        if ( min < dis[q[j]] ) swap ( i, j );
+    }
+    while ( i != j );
+}
+
+
+
+
+
+void relax ( int i, int j, int w )
+
+
+{
+    if ( w >= dis[j] ) return;
+    dis[j] = w;
+    up ( qpos[j] );
+}
+
+
+long dijkstra ( int s )
+
+
+{
+    int i, j;
+    for ( i = 1; i <= n; i++ )
+    {
+        dis[i] = maxnum;
+        q[i] = i;
+        qpos[i] = i;
+    }
+    swap ( s, 1 );
+    qtot = n;
+    dis[s] = 0;
+    while ( qtot > 1 )
+    {
+        i = q[1];
+        swap ( 1, qtot ); //ä¿è¯qposä¹Ÿæ”¹äº†ï¼Œæ‰€ä»¥q[1]=q[qtot]æ˜¯é”™çš„
+        qtot--;
+        down ( 1 );
+        nodetype *p = map[i];
+        while ( p )
+        {
+            if ( qpos[p->v] <= qtot ) relax ( i, p->v, dis[i] + p->l );
+            p = p->next;
+        }
+    }
+    //diså·²ç»äº§ç”Ÿ
+    long sum = 0;
+    for ( i = 1; i <= n; i++ )
+    {
+        if ( dis[i] == maxnum ) continue;
+        if ( dis[i] > 0 ) sum += dis[i];
+    }
+    return sum;
+}
+
+
 int main()
- {
-  int p,m;
-  fin>>n>>m;            //mÊÇ±ßÊı 
-  int i; 
-  memset(map,0,sizeof(map));
-  for (i=1;i<=m;i++)
-   {
-    int a,b,l;
-    fin>>a>>b>>l;
-    
-    nodetype *p=new nodetype;
-    p->next=map[a];
-    p->v=b;
-    p->l=l;
-    map[a]=p;
 
-    nodetype *qq=new nodetype;
-    qq->next = map[b];
-    qq->v = a;
-    qq->l = l;
-    map[b]=qq;
-   }  
-  return 0;
- }
+
+{
+    int p, m;
+    fin >> n >> m;        //mæ˜¯è¾¹æ•°
+    int i;
+    memset ( map, 0, sizeof ( map ) );
+    for ( i = 1; i <= m; i++ )
+    {
+        int a, b, l;
+        fin >> a >> b >> l;
+        nodetype *p = new nodetype;
+        p->next = map[a];
+        p->v = b;
+        p->l = l;
+        map[a] = p;
+        nodetype *qq = new nodetype;
+        qq->next = map[b];
+        qq->v = a;
+        qq->l = l;
+        map[b] = qq;
+    }
+    return 0;
+}
+

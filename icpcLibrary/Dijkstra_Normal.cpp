@@ -1,36 +1,80 @@
 //Belongs to Logical Mars Library
+
+
 /*===============================================
 
-                µ¥Ô´×î¶ÌÂ·¾¶
 
-                Dijkstra Ëã·¨
 
-            ÊÊÓÃÌõ¼ş£ºËùÓĞ±ßµÄÈ¨·Ç¸º
 
-            !!×¢Òâ£º
-            1.ÊäÈëµÄÍ¼µÄÈ¨±ØĞë·Ç¸º
-            2.¶¥µã±êºÅ´Ó0¿ªÊ¼
-            3.µ±i,j²»ÏàÁÚÊ±G[i,j]=infinity
+
+                å•æºæœ€çŸ­è·¯å¾„
+
+
+
+
+
+                Dijkstra ç®—æ³•
+
+
+
+
+
+            é€‚ç”¨æ¡ä»¶ï¼šæ‰€æœ‰è¾¹çš„æƒéè´Ÿ
+
+
+
+
+
+            !!æ³¨æ„ï¼š
+
+
+            1.è¾“å…¥çš„å›¾çš„æƒå¿…é¡»éè´Ÿ
+
+
+            2.é¡¶ç‚¹æ ‡å·ä»0å¼€å§‹
+
+
+            3.å½“i,jä¸ç›¸é‚»æ—¶G[i,j]=infinity
+
+
+
+
 
 ================================================*/
-int Dijkstra(Graph G,int n,int s,int t, int path[])
+
+
+int Dijkstra ( Graph G, int n, int s, int t, int path[] )
+
+
 {
-    int i,j,w,minc,d[max_vertexes],mark[max_vertexes];
-    for (i=0;i<n;i++) mark[i]=0;
-    for (i=0;i<n;i++)
-        {   d[i]=G[s][i];
-            path[i]=s;	}
-    mark[s]=1;path[s]=0;d[s]=0;
-    for (i=1;i<n;i++)
-		{   minc=infinity;
-          w=0;
-          for (j=0;j<n;j++)
-            if ((mark[j]==0)&&(minc>=d[j])) {minc=d[j];w=j;}
-          mark[w]=1;
-          for (j=0;j<n;j++)
-            if ((mark[j]==0)&&(G[w][j]!=infinity)&&(d[j]>d[w]+G[w][j]))
-                {   d[j]=d[w]+G[w][j];
-                    path[j]=w;     }
-      }
+    int i, j, w, minc, d[max_vertexes], mark[max_vertexes];
+    for ( i = 0; i < n; i++ ) mark[i] = 0;
+    for ( i = 0; i < n; i++ )
+    {
+        d[i] = G[s][i];
+        path[i] = s;
+    }
+    mark[s] = 1;
+    path[s] = 0;
+    d[s] = 0;
+    for ( i = 1; i < n; i++ )
+    {
+        minc = infinity;
+        w = 0;
+        for ( j = 0; j < n; j++ )
+            if ( ( mark[j] == 0 ) && ( minc >= d[j] ) )
+            {
+                minc = d[j];
+                w = j;
+            }
+        mark[w] = 1;
+        for ( j = 0; j < n; j++ )
+            if ( ( mark[j] == 0 ) && ( G[w][j] != infinity ) && ( d[j] > d[w] + G[w][j] ) )
+            {
+                d[j] = d[w] + G[w][j];
+                path[j] = w;
+            }
+    }
     return d[t];
 }
+

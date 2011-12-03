@@ -1,95 +1,215 @@
 /*
-¶ş·ÖÍ¼×î´óÆ¥Åä: Hopcroft_KarpËã·¨£¬¸´ÔÓ¶È: O(n^2.5).
-ÓÃBFSÕÒ¶àÌõÔö¹ãÂ·£¬ÓÃdistx, distyÀ´¼ÇÂ¼ÏÂÒ»¸öµã£¬ÓÃDFSÀ´±éÀúÕâĞ©Ôö¹ãÂ·.
+
+
+äºŒåˆ†å›¾æœ€å¤§åŒ¹é…: Hopcroft_Karpç®—æ³•ï¼Œå¤æ‚åº¦: O(n^2.5).
+
+
+ç”¨BFSæ‰¾å¤šæ¡å¢å¹¿è·¯ï¼Œç”¨distx, distyæ¥è®°å½•ä¸‹ä¸€ä¸ªç‚¹ï¼Œç”¨DFSæ¥éå†è¿™äº›å¢å¹¿è·¯.
+
+
 */
+
+
 #include <iostream>
+
+
 #include <cstring>
+
+
 #include <cmath>
+
+
 #include <climits>
+
+
 #include <algorithm>
+
+
 #include <cstdio>
+
+
 using namespace std;
 
+
+
+
+
 typedef long long int64;
+
+
 typedef int T;
+
+
 #define mem(a, b) memset(a, b, sizeof(a))
+
+
 #define Sqr(x) ((x) * (x))
-inline T Max(T a, T b) { if (a < b) a = b; return a; }
-inline T Min(T a, T b) { if (a > b) a = b; return a; }
-inline void Swap(T & a, T & b) { T t = a; a = b; b = t; }
+
+
+inline T Max ( T a, T b )
+{
+    if ( a < b ) a = b;
+    return a;
+}
+
+
+inline T Min ( T a, T b )
+{
+    if ( a > b ) a = b;
+    return a;
+}
+
+
+inline void Swap ( T & a, T & b )
+{
+    T t = a;
+    a = b;
+    b = t;
+}
+
+
+
+
 
 const int maxn = 1005;
+
+
 const int maxm = 100005;
+
+
 const double EPS = 1e-10;
+
+
 const int INF = INT_MAX / 2;
 
+
+
+
+
 struct EDGE
+
+
 {
+
+
     int a, b;
+
+
     int next;
+
+
 };
 
+
+
+
+
 int nx, ny, m;
+
+
 EDGE edge[maxm];
+
+
 int edge_num;
+
+
 int first[maxn];
-int cx[maxn], cy[maxn];// cx[i]±íÊ¾xi¶ÔÓ¦µÄÆ¥Åä£¬cy[i]±íÊ¾yi¶ÔÓ¦µÄÆ¥Åä.
-int distx[maxn], disty[maxn]; // ²ãµÄ¸ÅÄî£¬¼´ÔÚBFSÖĞµÄµÚ¼¸²ã.
+
+
+int cx[maxn], cy[maxn];// cx[i]è¡¨ç¤ºxiå¯¹åº”çš„åŒ¹é…ï¼Œcy[i]è¡¨ç¤ºyiå¯¹åº”çš„åŒ¹é….
+
+
+int distx[maxn], disty[maxn]; // å±‚çš„æ¦‚å¿µï¼Œå³åœ¨BFSä¸­çš„ç¬¬å‡ å±‚.
+
+
+
+
 
 int que[maxn];
+
+
 int head, tail;
+
+
+
+
 
 int ans;
 
-void Debug(void)
+
+
+
+
+void Debug ( void )
+
+
 {
     int i, j;
 }
 
-void Init(void)
+
+
+
+
+void Init ( void )
+
+
 {
     int i, j;
-    fill(cx, cx + maxn, -1);
-    fill(cy, cy + maxn, -1);
-    fill(first, first + maxn, -1);
+    fill ( cx, cx + maxn, -1 );
+    fill ( cy, cy + maxn, -1 );
+    fill ( first, first + maxn, -1 );
     edge_num = 0;
     ans = 0;
 }
 
-void AddEdge(int a, int b)
+
+
+
+
+void AddEdge ( int a, int b )
+
+
 {
     edge[edge_num].a = a, edge[edge_num].b = b;
     edge[edge_num].next = first[a], first[a] = edge_num++;
 }
 
-bool BFS(void)
+
+
+
+
+bool BFS ( void )
+
+
 {
     int i, j, k;
-    bool flag(0);
+    bool flag ( 0 );
     int h, t;
-    mem(distx, 0); mem(disty, 0);
+    mem ( distx, 0 );
+    mem ( disty, 0 );
     head = tail = 0;
-    for (i = 1; i <= nx; i++)
+    for ( i = 1; i <= nx; i++ )
     {
-        if (cx[i] == -1) que[tail++] = i;
+        if ( cx[i] == -1 ) que[tail++] = i;
     }
-    while (head != tail)
+    while ( head != tail )
     {
-        for (h = head, t = tail; h != t; h = (h + 1) % maxn)
+        for ( h = head, t = tail; h != t; h = ( h + 1 ) % maxn )
         {
             i = que[h];
-            for (k = first[i]; k != -1; k = edge[k].next)
+            for ( k = first[i]; k != -1; k = edge[k].next )
             {
                 j = edge[k].b;
-                if (!disty[j])
+                if ( !disty[j] )
                 {
                     disty[j] = distx[i] + 1;
-                    if (cy[j] == -1) flag = 1;
+                    if ( cy[j] == -1 ) flag = 1;
                     else
                     {
                         distx[cy[j]] = disty[j] + 1;
                         que[tail] = cy[j];
-                        tail = (tail + 1) % maxn;
+                        tail = ( tail + 1 ) % maxn;
                     }
                 }
             }
@@ -99,16 +219,23 @@ bool BFS(void)
     return flag;
 }
 
-bool DFS(int i)
+
+
+
+
+bool DFS ( int i )
+
+
 {
     int j, k;
-    for (k = first[i]; k != -1; k = edge[k].next)
+    for ( k = first[i]; k != -1; k = edge[k].next )
     {
         j = edge[k].b;
-        if (disty[j] == distx[i] + 1)
-        { // ËµÃ÷jÊÇiµÄºó¼Ì½áµã.
-            disty[j] = 0; // j±»ÓÃ¹ıÁË£¬²»ÄÜÔÙ×÷ÎªÆäËûµãµÄºó¼Ì½áµãÁË.
-            if (cy[j] == -1 || DFS(cy[j]))
+        if ( disty[j] == distx[i] + 1 )
+        {
+            // è¯´æ˜jæ˜¯içš„åç»§ç»“ç‚¹.
+            disty[j] = 0; // jè¢«ç”¨è¿‡äº†ï¼Œä¸èƒ½å†ä½œä¸ºå…¶ä»–ç‚¹çš„åç»§ç»“ç‚¹äº†.
+            if ( cy[j] == -1 || DFS ( cy[j] ) )
             {
                 cx[i] = j, cy[j] = i;
                 return 1;
@@ -118,34 +245,49 @@ bool DFS(int i)
     return 0;
 }
 
-void Hopcroft_Karp(void)
+
+
+
+
+void Hopcroft_Karp ( void )
+
+
 {
     int i, j;
-    while (BFS())
+    while ( BFS() )
     {
-        for (i = 1; i <= nx; i++)
+        for ( i = 1; i <= nx; i++ )
         {
-            if (cx[i] == -1 && DFS(i)) ans++;
+            if ( cx[i] == -1 && DFS ( i ) ) ans++;
         }
     }
 }
 
-int main(void)
+
+
+
+
+int main ( void )
+
+
 {
 //    freopen("Input.txt", "r", stdin);
     int i, j;
     int a, b;
-    while (scanf("%d %d %d", &nx, &ny, &m) != EOF)
+    while ( scanf ( "%d %d %d", &nx, &ny, &m ) != EOF )
     {
         Init();
-        while (m--)
+        while ( m-- )
         {
-            scanf("%d %d", &a, &b);
-            AddEdge(a, b);
+            scanf ( "%d %d", &a, &b );
+            AddEdge ( a, b );
         }
         Hopcroft_Karp();
-        printf("%d\n", ans);
+        printf ( "%d\n", ans );
     }
     return 0;
 }
+
+
+
 

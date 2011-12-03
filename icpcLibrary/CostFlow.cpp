@@ -1,144 +1,213 @@
 /*
-  Name: ×îĞ¡·ÑÓÃ×î´óÁ÷ 
+
+
+  Name: æœ€å°è´¹ç”¨æœ€å¤§æµ
+
+
   Copyright: LogicalMars Library
+
+
   Author: LogicalMars
+
+
   Date: 17-10-08 12:04
-  Description: 
+
+
+  Description:
+
+
 */
+
+
 #include <stdio.h>
+
+
 #include <string.h>
-FILE *fin=fopen("napkin.in","r"),*fout=fopen("napkin.out","w");
-const long maxlong=0x7fffffff/2;
-const long maxn=2010;
-long f[maxn][maxn],map[maxn][maxn],fee[maxn][maxn],last[maxn],best[maxn];
-//      f´æ´¢Á÷Á¿£¬ map´æ´¢Á÷Á¿ÉÏÏŞ£¬fee´æ´¢·ÑÓÃ 
-long n,nd[maxn],fnew,fa,fb,da,db;
-long to;//»ã 
+
+
+FILE *fin = fopen ( "napkin.in", "r" ), *fout = fopen ( "napkin.out", "w" );
+
+
+const long maxlong = 0x7fffffff / 2;
+
+
+const long maxn = 2010;
+
+
+long f[maxn][maxn], map[maxn][maxn], fee[maxn][maxn], last[maxn], best[maxn];
+
+
+//      få­˜å‚¨æµé‡ï¼Œ mapå­˜å‚¨æµé‡ä¸Šé™ï¼Œfeeå­˜å‚¨è´¹ç”¨
+
+
+long n, nd[maxn], fnew, fa, fb, da, db;
+
+
+long to;//æ±‡
+
+
 struct point
+
+
 {
+
+
     long k;
-    point *next,*other;
+
+
+    point *next, *other;
+
+
 }*link[maxn];
-long labs(long x)
+
+
+long labs ( long x )
+
+
 {
-    if (x<0) return -x;
+    if ( x < 0 ) return -x;
     return x;
 }
-void add(long x,long y)
+
+
+void add ( long x, long y )
+
+
 {
-    point *p=new point;
-    p->k=y;
-    p->next=p->other=NULL;
-    p->next=link[x]->next;
-    link[x]->next=p;
-    
-    point *q=new point;
-    q->k=x;
-    q->next=q->other=NULL;
-    q->next=link[y]->other;
-    link[y]->other=q;
-} 
-void adde(long x,long y,long cap,long fe)
-{
-    add(x,y);
-    map[x][y]=cap;
-    fee[x][y]=fe;
+    point *p = new point;
+    p->k = y;
+    p->next = p->other = NULL;
+    p->next = link[x]->next;
+    link[x]->next = p;
+    point *q = new point;
+    q->k = x;
+    q->next = q->other = NULL;
+    q->next = link[y]->other;
+    link[y]->other = q;
 }
+
+
+void adde ( long x, long y, long cap, long fe )
+
+
+{
+    add ( x, y );
+    map[x][y] = cap;
+    fee[x][y] = fe;
+}
+
+
 void init()
+
+
 {
-    long i,j;
-    memset(fee,0,sizeof(fee));
-    memset(map,0,sizeof(map));
-    //¶ÁÈëÍ¼ 
-    to=??
-    //
-    for (i=1;i<=to;i++) 
+    long i, j;
+    memset ( fee, 0, sizeof ( fee ) );
+    memset ( map, 0, sizeof ( map ) );
+    //è¯»å…¥å›¾
+    to = ??
+         //
+         for ( i = 1; i <= to; i++ )
     {
-        link[i]=new point;
-        link[i]->k=0;
-        link[i]->next=link[i]->other=NULL;
+        link[i] = new point;
+        link[i]->k = 0;
+        link[i]->next = link[i]->other = NULL;
     }
-    //¹¹Í¼ 
+    //æ„å›¾
 }
-long d[maxn];//²ÉÓÃÈ¡¶ÓÎ²µÄ·½·¨É¾³ı 
+
+
+long d[maxn];//é‡‡ç”¨å–é˜Ÿå°¾çš„æ–¹æ³•åˆ é™¤
+
+
 short visit[maxn];
-void costflow()//¼ÆËã´Ó1µ½toµÄ×îĞ¡·ÑÓÃ×î´óÁ÷ 
+
+
+void costflow() //è®¡ç®—ä»1åˆ°toçš„æœ€å°è´¹ç”¨æœ€å¤§æµ
+
+
 {
-    memset(f,0,sizeof(f));
-    long i,j;
-    long cost=0;
-    long h,t;
-    while(1)
+    memset ( f, 0, sizeof ( f ) );
+    long i, j;
+    long cost = 0;
+    long h, t;
+    while ( 1 )
     {
-        memset(last,0,sizeof(last));
-        memset(d,0,sizeof(d));
-        memset(visit,0,sizeof(visit));
-        h=t=1;
-        for (i=1;i<=to;i++) best[i]=maxlong;
-        best[1]=0;
-        last[1]=1;
-        d[1]=1;
-        visit[1]=1;
-        do   
+        memset ( last, 0, sizeof ( last ) );
+        memset ( d, 0, sizeof ( d ) );
+        memset ( visit, 0, sizeof ( visit ) );
+        h = t = 1;
+        for ( i = 1; i <= to; i++ ) best[i] = maxlong;
+        best[1] = 0;
+        last[1] = 1;
+        d[1] = 1;
+        visit[1] = 1;
+        do
         {
-            i=d[h];
-            point *p=link[i]->next;
-            while (p)
+            i = d[h];
+            point *p = link[i]->next;
+            while ( p )
             {
-                j=p->k;
-                if (f[i][j]<map[i][j] && best[i]+fee[i][j]<best[j])
+                j = p->k;
+                if ( f[i][j] < map[i][j] && best[i] + fee[i][j] < best[j] )
                 {
-                    best[j]=best[i]+fee[i][j];
-                    last[j]=i;  
-                    if (!visit[j]) 
+                    best[j] = best[i] + fee[i][j];
+                    last[j] = i;
+                    if ( !visit[j] )
                     {
                         t++;
-                        d[t]=j;
-                        visit[j]=1;
+                        d[t] = j;
+                        visit[j] = 1;
                     }
                 }
-                p=p->next;
+                p = p->next;
             }
-            p=link[i]->other;
-            while (p)
+            p = link[i]->other;
+            while ( p )
             {
-                j=p->k;
-                if (f[j][i]>0 && best[i]-fee[j][i]<best[j])
+                j = p->k;
+                if ( f[j][i] > 0 && best[i] - fee[j][i] < best[j] )
                 {
-                    best[j]=best[i]-fee[j][i];
-                    last[j]=-i;
-                    if (!visit[j])
+                    best[j] = best[i] - fee[j][i];
+                    last[j] = -i;
+                    if ( !visit[j] )
                     {
                         t++;
-                        d[t]=j;
-                        visit[j]=1;
+                        d[t] = j;
+                        visit[j] = 1;
                     }
                 }
-                p=p->next;
+                p = p->next;
             }
-            visit[i]=0;
-            d[h]=d[t];
+            visit[i] = 0;
+            d[h] = d[t];
             t--;
-        }while (h<=t);
-        if (best[to]==maxlong) break;
-        long delta=maxlong;
-        i=to;
+        }
+        while ( h <= t );
+        if ( best[to] == maxlong ) break;
+        long delta = maxlong;
+        i = to;
         do
         {
-            j=i;i=labs(last[i]);
+            j = i;
+            i = labs ( last[i] );
             long xx;
-            if (last[j]>0) xx=map[i][j]-f[i][j];
-            else xx=f[j][i];
-            if (xx<delta) delta=xx;
-        }while (i!=1);
-        i=to;
+            if ( last[j] > 0 ) xx = map[i][j] - f[i][j];
+            else xx = f[j][i];
+            if ( xx < delta ) delta = xx;
+        }
+        while ( i != 1 );
+        i = to;
         do
         {
-            j=i;i=labs(last[i]);
-            if (last[j]>0) f[i][j]+=delta;
-            else f[j][i]-=delta;
-        }while (i!=1);
-        cost+=delta*best[to];
+            j = i;
+            i = labs ( last[i] );
+            if ( last[j] > 0 ) f[i][j] += delta;
+            else f[j][i] -= delta;
+        }
+        while ( i != 1 );
+        cost += delta * best[to];
     }
-    fprintf(fout,"%ld",cost); 
+    fprintf ( fout, "%ld", cost );
 }
+

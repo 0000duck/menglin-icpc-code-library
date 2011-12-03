@@ -1,45 +1,74 @@
 /*
-  Name: Ê÷×´Êý×é¶þÎ¬ 
+
+
+  Name: æ ‘çŠ¶æ•°ç»„äºŒç»´
+
+
   Copyright: LogicalMars Library
-  Author: LogicalMars   
+
+
+  Author: LogicalMars
+
+
   Date: 16-10-08 22:23
-  Description: ¿ìËÙÇó(1,1)µ½(x,y)´¦µÄ¾ØÕóµÄºÍ 
+
+
+  Description: å¿«é€Ÿæ±‚(1,1)åˆ°(x,y)å¤„çš„çŸ©é˜µçš„å’Œ
+
+
 */
+
+
 #include <string.h>
-#include <stdio.h> 
-long lowbit(long x)
+
+
+#include <stdio.h>
+
+
+long lowbit ( long x )
+
+
 {
-    return x & (x ^ (x-1));
+    return x & ( x ^ ( x - 1 ) );
 }
-void insert(long x,long y,long a)   //¶Ô(x,y)¼ÓÉÏa 
+
+
+void insert ( long x, long y, long a ) //å¯¹(x,y)åŠ ä¸Ša
+
+
 {
-    long i,j;
-    i=x;
-    j=y;
-    while (i<=maxn)
+    long i, j;
+    i = x;
+    j = y;
+    while ( i <= maxn )
     {
-        j=y;
-        while (j<=maxn) 
+        j = y;
+        while ( j <= maxn )
         {
-            c[i][j]+=a;
-            j+=lowbit(j);
+            c[i][j] += a;
+            j += lowbit ( j );
         }
-        i+=lowbit(i);
+        i += lowbit ( i );
     }
 }
-long sum(long x,long y)             //ÇóºÍ£¨1£¬1£©µ½£¨x£¬y) 
+
+
+long sum ( long x, long y )         //æ±‚å’Œï¼ˆ1ï¼Œ1ï¼‰åˆ°ï¼ˆxï¼Œy)
+
+
 {
-    long re=0;
-    long i=x,j=y;
-    while (i>0)
+    long re = 0;
+    long i = x, j = y;
+    while ( i > 0 )
     {
-        j=y;
-        while (j>0)
+        j = y;
+        while ( j > 0 )
         {
-            re+=c[i][j];
-            j-=lowbit(j);
+            re += c[i][j];
+            j -= lowbit ( j );
         }
-        i-=lowbit(i);
+        i -= lowbit ( i );
     }
     return re;
 }
+

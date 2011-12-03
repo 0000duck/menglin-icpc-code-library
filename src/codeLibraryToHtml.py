@@ -1,6 +1,6 @@
 '''
 Created on Dec 3, 2011
-Used to 
+Used to generate Html list of Logicalmars Code Library 
 
 @author: v-menlin
 '''
@@ -11,6 +11,7 @@ path = r"C:\Users\v-menlin\Desktop\ACM\LogicalMarsLibrary\Test"
 
 color = ['White', 'Yellow']
 t = HTML.Table(header_row = ['Name', 'Link', 'Language', 'Description'])
+baseurl = 'http://code.google.com/p/menglin-icpc-code-library/source/browse/icpcLibrary/'
 
 count = 0
 for (path, dirs, files) in os.walk(path, True, None):    
@@ -21,7 +22,7 @@ for (path, dirs, files) in os.walk(path, True, None):
         bgcolor = color[count % 2]
         row = []
         row.append(HTML.TableCell(name, bgcolor))
-        lk = HTML.link('(link)', 'http://dl.dropbox.com/u/49091023/CodeLibrary/' + f)
+        lk = HTML.link('(link)', baseurl + f)
         row.append(HTML.TableCell(lk, bgcolor))
         row.append(HTML.TableCell("C++", bgcolor))          
         row.append(HTML.TableCell(name.replace("_", " "), bgcolor))    

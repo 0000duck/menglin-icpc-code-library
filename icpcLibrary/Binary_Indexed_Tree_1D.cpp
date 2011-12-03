@@ -1,34 +1,69 @@
 /*
-  Name: Ê÷×´Êý×é 
+
+
+  Name: æ ‘çŠ¶æ•°ç»„
+
+
   Copyright: LogicalMars Library
-  Author: LogicalMars   
+
+
+  Author: LogicalMars
+
+
   Date: 16-10-08 22:14
-  Description: ¿ìËÙÇóºÍ£¬1 ¡« X 
+
+
+  Description: å¿«é€Ÿæ±‚å’Œï¼Œ1 ï½ž X
+
+
 */
+
+
 #include <stdio.h>
-#include <string.h> 
-const long maxn=10000;
+
+
+#include <string.h>
+
+
+const long maxn = 10000;
+
+
 long c[maxn];
-long lowbit(long x)
+
+
+long lowbit ( long x )
+
+
 {
-    return x & (x ^ (x-1));
+    return x & ( x ^ ( x - 1 ) );
 }
-void add(long x,long a) //¶ÔµÚX¸öÊý¼ÓÉÏa 
+
+
+void add ( long x, long a ) //å¯¹ç¬¬Xä¸ªæ•°åŠ ä¸Ša
+
+
 {
-    while (x<=maxn)
+    while ( x <= maxn )
     {
-        c[x]+=a;
-        x+=lowbit(x);
+        c[x] += a;
+        x += lowbit ( x );
     }
 }
-long sum(long x)        //ÇóÇ°XÏîµÄºÍ 
+
+
+long sum ( long x )     //æ±‚å‰Xé¡¹çš„å’Œ
+
+
 {
-    long re=0;
-    while (x>0)
+    long re = 0;
+    while ( x > 0 )
     {
-        re+=c[x];
-        x-=lowbit(x);
+        re += c[x];
+        x -= lowbit ( x );
     }
     return re;
 }
+
+
+
 

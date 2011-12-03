@@ -1,65 +1,91 @@
 /*Logical Mars Codes Library
- * 
- * ²î·ÖÔ¼ÊøÏµÍ³
+
  *
- *      Ò»°ã½ÚµãS¶¼ÊÇ¶¼ÊÇÄ³¸öÊıÁĞµÄºÍ£¬ÓÃÆğÀ´ºÜÁé»î¡£±ÈÈçÇø¼äÎÊÌâ£¬½ÚµãÉèÎªÇø¼äµãÉÏµÄÊı×Ö³öÏÖ´ÎÊı
- *      µÄºÍ£¬¾Í¿ÉÒÔ½âÒ»Ğ©Çø¼äÏŞÖÆĞÍµÄÎÊÌâ¡£×¢ÒâÊä³öÊ±£¬¸öÊıÓ¦¸ÃÊÇdis[n] - dis[0]¡£
- *      Çó×î´óÖµ£¬¾ÍÊÇÓÃ<=¹¹Í¼Çó×î¶ÌÂ·¡£
- *      Çó×îĞ¡Öµ£¬¾ÍÊÇÓÃ>=¹¹Í¼Çó×î³¤Â·¡£
+
+ * å·®åˆ†çº¦æŸç³»ç»Ÿ
+
+ *
+
+ *      ä¸€èˆ¬èŠ‚ç‚¹Séƒ½æ˜¯éƒ½æ˜¯æŸä¸ªæ•°åˆ—çš„å’Œï¼Œç”¨èµ·æ¥å¾ˆçµæ´»ã€‚æ¯”å¦‚åŒºé—´é—®é¢˜ï¼ŒèŠ‚ç‚¹è®¾ä¸ºåŒºé—´ç‚¹ä¸Šçš„æ•°å­—å‡ºç°æ¬¡æ•°
+
+ *      çš„å’Œï¼Œå°±å¯ä»¥è§£ä¸€äº›åŒºé—´é™åˆ¶å‹çš„é—®é¢˜ã€‚æ³¨æ„è¾“å‡ºæ—¶ï¼Œä¸ªæ•°åº”è¯¥æ˜¯dis[n] - dis[0]ã€‚
+
+ *      æ±‚æœ€å¤§å€¼ï¼Œå°±æ˜¯ç”¨<=æ„å›¾æ±‚æœ€çŸ­è·¯ã€‚
+
+ *      æ±‚æœ€å°å€¼ï¼Œå°±æ˜¯ç”¨>=æ„å›¾æ±‚æœ€é•¿è·¯ã€‚
+
  */
- #include <string.h>
- #include <stdio.h>
- const int maxn = 110;//×î´ó¶¥µãÊı
- const int maxm = 110;//×î´ó±ßÊı
- int s[maxn];
- int edge[maxm][3];
- int es;
- int n,m;
-void add_edge(int a,int b,int c) //´Óaµ½b¼ÓÒ»Ìõ±ßÈ¨ÎªcµÄ±ß
- {
-         es++;
-         edge[es][1]=a;
-         edge[es][2]=b;
-         edge[es][0]=c;
- }
- void Bellmanford()
- {
-         int i,j;
-         int dis[maxn];
-         memset(dis,0,sizeof(dis));     //dis[i] ´æ´¢iµ½v0µÄ×î¶Ì¾àÀë¡£v0ÊÇĞéÉèµÄÒ»¸ö½Úµã
-         for (i=1;i<=n;i++)
-         {
-                 for (j=1;j<=es;j++) 
-                        if (dis[edge[j][1]]+edge[j][0] < dis[edge[j][2]]) dis[edge[j][2]] = dis[edge[j][1]]+edge[j][0];
-         }
-         int flag=0;
-         for (i=1;i<=es;i++)
-         {
-                 if (dis[edge[i][1]] + edge[i][0] < dis[edge[i][2]]) {flag=1;break;}
-         }
-         if (flag) printf("successful conspiracy\n");
-         else printf("lamentable kingdom\n");
- }
- int main()
- { 
-         int i;
-         scanf("%d",&n);
-         while (n!=0)
-         {
-                 scanf("%d",&m);
-                 es=0;                          //es±íÊ¾±ßÊı£¬×¢ÒâÇå0
-                 for (i=1;i<=m;i++)
-                 {
-                         int a,b,c;
-                         char ss[5];
-                         scanf("%d%d",&a,&b);
-                         scanf("%s",ss);
-                         scanf("%d",&c);
-                         if (ss[0]=='l') add_edge(a-1,a+b,c-1);
-                         else add_edge(a+b,a-1,-c-1);
-                 }
-                 Bellmanford();
-                 scanf("%d",&n);
-         }
-         return 0;
- }
+
+#include <string.h>
+
+#include <stdio.h>
+
+const int maxn = 110;//æœ€å¤§é¡¶ç‚¹æ•°
+
+const int maxm = 110;//æœ€å¤§è¾¹æ•°
+
+int s[maxn];
+
+int edge[maxm][3];
+
+int es;
+
+int n, m;
+
+void add_edge ( int a, int b, int c ) //ä»aåˆ°båŠ ä¸€æ¡è¾¹æƒä¸ºcçš„è¾¹
+
+{
+    es++;
+    edge[es][1] = a;
+    edge[es][2] = b;
+    edge[es][0] = c;
+}
+
+void Bellmanford()
+
+{
+    int i, j;
+    int dis[maxn];
+    memset ( dis, 0, sizeof ( dis ) ); //dis[i] å­˜å‚¨iåˆ°v0çš„æœ€çŸ­è·ç¦»ã€‚v0æ˜¯è™šè®¾çš„ä¸€ä¸ªèŠ‚ç‚¹
+    for ( i = 1; i <= n; i++ )
+    {
+        for ( j = 1; j <= es; j++ )
+            if ( dis[edge[j][1]] + edge[j][0] < dis[edge[j][2]] ) dis[edge[j][2]] = dis[edge[j][1]] + edge[j][0];
+    }
+    int flag = 0;
+    for ( i = 1; i <= es; i++ )
+    {
+        if ( dis[edge[i][1]] + edge[i][0] < dis[edge[i][2]] )
+        {
+            flag = 1;
+            break;
+        }
+    }
+    if ( flag ) printf ( "successful conspiracy\n" );
+    else printf ( "lamentable kingdom\n" );
+}
+
+int main()
+
+{
+    int i;
+    scanf ( "%d", &n );
+    while ( n != 0 )
+    {
+        scanf ( "%d", &m );
+        es = 0;                        //esè¡¨ç¤ºè¾¹æ•°ï¼Œæ³¨æ„æ¸…0
+        for ( i = 1; i <= m; i++ )
+        {
+            int a, b, c;
+            char ss[5];
+            scanf ( "%d%d", &a, &b );
+            scanf ( "%s", ss );
+            scanf ( "%d", &c );
+            if ( ss[0] == 'l' ) add_edge ( a - 1, a + b, c - 1 );
+            else add_edge ( a + b, a - 1, -c - 1 );
+        }
+        Bellmanford();
+        scanf ( "%d", &n );
+    }
+    return 0;
+}
